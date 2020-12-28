@@ -142,5 +142,4 @@ export default class CentraRequest {
 			req.end();
 		});
 	}
-
-};
+}

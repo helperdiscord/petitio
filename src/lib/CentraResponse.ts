@@ -2,8 +2,8 @@ import { IncomingMessage } from 'http';
 
 export default class CentraResponse {
   public body: Buffer = Buffer.alloc(0);
-  public headers: IncomingMessage['headers'];;
-  public statusCode: IncomingMessage['statusCode'];;
+  public headers: IncomingMessage['headers'];
+  public statusCode: IncomingMessage['statusCode'];
 
 	constructor(public coreRes: IncomingMessage) {
 		this.headers = coreRes.headers;
