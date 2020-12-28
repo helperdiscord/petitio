@@ -12,7 +12,7 @@ export default class CentraRequest {
   public url: URL;
   public data: string | Buffer | null = null;
   public sendDataAs: 'form' | 'json' | 'buffer' | null = null;
-  public reqHeaders: { [header: string]: string }
+  public reqHeaders: { [header: string]: string } = {};
   public coreOptions: RequestOptions = {};
 
 	constructor(url: string | URL, public httpMethod: HTTPMethod = 'GET') {
