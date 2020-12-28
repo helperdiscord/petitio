@@ -4,7 +4,7 @@ import https, { RequestOptions } from 'https';
 import qs from 'querystring';
 import { URL } from 'url';
 
-import CentraResponse from 'centra/src/lib/CentraResponse';
+import CentraResponse from './CentraResponse';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 

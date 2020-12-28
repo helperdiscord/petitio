@@ -8,7 +8,7 @@ const http_1 = __importDefault(require("http"));
 const https_1 = __importDefault(require("https"));
 const querystring_1 = __importDefault(require("querystring"));
 const url_1 = require("url");
-const CentraResponse_1 = __importDefault(require("centra/dist/lib/CentraResponse"));
+const CentraResponse_1 = __importDefault(require("./CentraResponse"));
 class CentraRequest {
     constructor(url, httpMethod = 'GET') {
         this.httpMethod = httpMethod;
