@@ -7,8 +7,6 @@ class CentraResponse {
         this.headers = coreRes.headers;
         this.statusCode = coreRes.statusCode;
     }
-    ;
-    ;
     _addChunk(chunk) {
         this.body = Buffer.concat([this.body, chunk]);
     }

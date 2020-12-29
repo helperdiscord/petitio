@@ -14,6 +14,7 @@ class CentraRequest {
         this.httpMethod = httpMethod;
         this.data = null;
         this.sendDataAs = null;
+        this.reqHeaders = {};
         this.coreOptions = {};
         this.url = typeof url === 'string' ? new url_1.URL(url) : url;
         return this;
@@ -120,4 +121,3 @@ class CentraRequest {
     }
 }
 exports.default = CentraRequest;
-;
