@@ -14,7 +14,7 @@ export default class CentraResponse {
 		this.body = Buffer.concat([this.body, chunk]);
 	}
 
-	public get json(): Promise<any> {
+	public get json(): any {
 		return JSON.parse(this.body as unknown as string);
 	}
 
