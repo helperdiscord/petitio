@@ -1,5 +1,5 @@
 {
-	"name": "@helper/centra",
+	"name": "@helperdiscord/centra",
 	"version": "1.0.6",
 	"description": "Fork of centra to support only what helper needs.",
 	"main": "dist/index.js",
@@ -9,7 +9,8 @@
 		"url": "https://github.com/helperdiscord/centra.git"
 	},
 	"scripts": {
-		"build": "tsc -p ."
+		"build": "tsc -p .",
+		"prepack": "npm build"
 	},
 	"author": "Vetlix <vetlixk@gmail.com>",
 	"license": "BSD-3-Clause",
