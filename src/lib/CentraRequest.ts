@@ -72,7 +72,7 @@ export default class CentraRequest {
 
 	async json(): Promise<any> {
 		const res = await this.send();
-		return res.json;
+		return res.json();
 	}
 
 	async raw(): Promise<Buffer> {
@@ -82,7 +82,7 @@ export default class CentraRequest {
 
 	async text(): Promise<string> {
 		const res = await this.send();
-		return res.text;
+		return res.text();
 	}
 
 	public send(): Promise<CentraResponse> {

@@ -14,11 +14,11 @@ export default class CentraResponse {
 		this.body = Buffer.concat([this.body, chunk]);
 	}
 
-	public get json(): any {
-		return JSON.parse(this.body as unknown as string);
+	public json(): any {
+		return JSON.parse(this.body as unknown as string)
 	}
 
-	public get text(): string {
+	public text(): string {
 		return this.body.toString('utf-8');
 	}
 };
