@@ -15,12 +15,26 @@ export default class CentraRequest {
   public reqHeaders: { [header: string]: string } = {};
   public coreOptions: RequestOptions = {};
 
+	/**
+	 * Creates an instance of CentraRequest.
+	 * @param {(string | URL)} url
+	 * @param {HTTPMethod} [httpMethod='GET']
+	 * @memberof CentraRequest
+	 */
 	constructor(url: string | URL, public httpMethod: HTTPMethod = 'GET') {
 		this.url = typeof url === 'string' ? new URL(url) : url;
 
 		return this;
 	}
 
+	/**
+	 *
+	 *
+	 * @param {string} key
+	 * @param {*} value
+	 * @return {*}  {this}
+	 * @memberof CentraRequest
+	 */
 	public query(key: string, value: any): this {
 		if (typeof key === 'object') {
 			Object.keys(key).forEach((queryKey: string) => {
@@ -32,20 +46,43 @@ export default class CentraRequest {
 
 		return this;
 	}
-
+	
+	/**
+	 *
+	 *
+	 * @param {string} relativePath
+	 * @return {*}  {this}
+	 * @memberof CentraRequest
+	 */
 	public path(relativePath: string): this {
 		this.url.pathname = path.join(this.url.pathname, relativePath);
     
 		return this;
 	}
 
+	/**
+	 *
+	 *
+	 * @param {*} data
+	 * @param {('json' | 'buffer' | 'form')} [sendAs]
+	 * @return {*}  {this}
+	 * @memberof CentraRequest
+	 */
 	public body(data: any, sendAs?: 'json' | 'buffer' | 'form'): this {
 		this.sendDataAs = typeof data === 'object' && !sendAs && !Buffer.isBuffer(data) ? 'json' : sendAs ? sendAs.toLowerCase() as 'buffer' | 'json' | 'form' : 'buffer';
 		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : data;
 
 		return this;
 	}
-
+	
+	/**
+	 *
+	 *
+	 * @param {(string | { [k: string]: string })} header
+	 * @param {string} [value]
+	 * @return {*} 
+	 * @memberof CentraRequest
+	 */
 	public header(header: string | { [k: string]: string }, value?: string) {
 		if (typeof header === 'object') {
 			Object.keys(header).forEach(headerName => {
@@ -58,33 +95,71 @@ export default class CentraRequest {
 		return this;
 	}
 
+	/**
+	 *
+	 *
+	 * @param {HTTPMethod} method
+	 * @return {*}  {this}
+	 * @memberof CentraRequest
+	 */
 	public method(method: HTTPMethod): this {
 		this.httpMethod = method;
 
 		return this;
 	}
 
+	/**
+	 *
+	 *
+	 * @param {number} timeout
+	 * @return {*}  {this}
+	 * @memberof CentraRequest
+	 */
 	public timeout(timeout: number): this {
 		this.coreOptions.timeout = timeout;
 
 		return this;
 	}
 
+	/**
+	 *
+	 *
+	 * @return {*}  {Promise<any>}
+	 * @memberof CentraRequest
+	 */
 	async json(): Promise<any> {
 		const res = await this.send();
 		return res.json();
 	}
 
+	/**
+	 *
+	 *
+	 * @return {*}  {Promise<Buffer>}
+	 * @memberof CentraRequest
+	 */
 	async raw(): Promise<Buffer> {
 		const res = await this.send();
 		return res.body;
 	}
 
+	/**
+	 *
+	 *
+	 * @return {*}  {Promise<string>}
+	 * @memberof CentraRequest
+	 */
 	async text(): Promise<string> {
 		const res = await this.send();
 		return res.text();
 	}
-
+	
+	/**
+	 *
+	 *
+	 * @return {*}  {Promise<CentraResponse>}
+	 * @memberof CentraRequest
+	 */
 	public send(): Promise<CentraResponse> {
 		return new Promise((resolve, reject) => {
 			if (this.data) {
