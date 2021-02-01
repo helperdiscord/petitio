@@ -1,6 +1,6 @@
 {
 	"name": "@helperdiscord/centra",
-	"version": "1.1.3",
+	"version": "1.2.0",
 	"description": "Fork of centra to support only what helper needs.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -10,13 +10,16 @@
 	},
 	"scripts": {
 		"build": "tsc -p .",
-		"prepack": "npm build"
+		"prepack": "npm build",
+		"docs": "typedoc src/index.ts --theme node_modules/typedoc-twilio-theme/bin"
 	},
-	"author": "Vetlix <vetlixk@gmail.com>",
+	"author": "Vetlix <vetlixk@gmail.com> doge <doge@helper.wtf>",
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^14.14.20",
 		"tsup": "^3.11.0",
+		"typedoc": "^0.20.20",
+		"typedoc-twilio-theme": "^1.0.1",
 		"typescript": "^4.1.3"
 	},
 	"dependencies": {}
