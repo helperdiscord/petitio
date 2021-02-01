@@ -31,7 +31,7 @@ export default class CentraResponse {
 	 * @return {*}  {*}
 	 * @memberof CentraResponse
 	 */
-	public json(): any {
+	public json<T = any>(): T {
 		return JSON.parse(this.body as unknown as string)
 	}
 

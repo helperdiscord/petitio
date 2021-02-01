@@ -127,9 +127,9 @@ export default class CentraRequest {
 	 * @return {*}  {Promise<any>}
 	 * @memberof CentraRequest
 	 */
-	async json(): Promise<any> {
+	async json<T = any>(): Promise<T> {
 		const res = await this.send();
-		return res.json();
+		return res.json<T>();
 	}
 
 	/**
