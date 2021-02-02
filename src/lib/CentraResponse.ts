@@ -1,6 +1,6 @@
 import { IncomingMessage } from 'http';
 
-export default class CentraResponse {
+export class CentraResponse {
   public body: Buffer = Buffer.alloc(0);
   public headers: IncomingMessage['headers'];
   public statusCode: IncomingMessage['statusCode'];

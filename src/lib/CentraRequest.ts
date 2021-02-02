@@ -4,11 +4,11 @@ import https, { RequestOptions } from 'https';
 import qs from 'querystring';
 import { URL } from 'url';
 
-import CentraResponse from './CentraResponse';
+import { CentraResponse } from './CentraResponse';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
-export default class CentraRequest {
+export class CentraRequest {
   public url: URL;
   public data: string | Buffer | null = null;
   public sendDataAs: 'form' | 'json' | 'buffer' | null = null;
