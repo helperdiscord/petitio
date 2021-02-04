@@ -7,7 +7,4 @@ import { CentraRequest, HTTPMethod } from './lib/CentraRequest';
  */
 const req = (url: URL | string, method: HTTPMethod = 'GET') => new CentraRequest(url, method);
 
-// @ts-ignore
 export = req;
-export * from './lib/CentraRequest';
-export * from './lib/CentraResponse';
