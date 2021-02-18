@@ -1,4 +1,5 @@
 import { CentraRequest, HTTPMethod } from './lib/CentraRequest';
+import { URL } from 'url';
 /**
  *
  *
