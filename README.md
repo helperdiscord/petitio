@@ -55,5 +55,5 @@ type Gateway {
     url: string
 }
 
-const res: Gateway = await req('https://discord.com/api/gateway').json();
+const res = await req<Gateway>('https://discord.com/api/gateway').json();
 ```
