@@ -1,0 +1,17 @@
+name: Publish
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+        npm config set //registry.npmjs.org/:_authToken $TOKEN 
+        npm install
+        npm run build
+        npm publish
+      env:
+        TOKEN: ${{secrets.NPM_TOKEN}}
