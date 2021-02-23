@@ -1,6 +1,6 @@
 {
 	"name": "@helperdiscord/centra",
-	"version": "2.0.2",
+	"version": "2.0.3",
 	"description": "Fork of centra to support only what helper needs.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
