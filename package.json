@@ -13,7 +13,7 @@
 		"url": "https://github.com/helperdiscord/centra.git"
 	},
 	"scripts": {
-		"build": "tsc -p .",
+		"build": "tsc --emitDeclarationOnly --outDir dist && esbuild src/*.ts --bundle --minify --platform=node --outdir=dist --tsconfig=tsconfig.json",
 		"prepack": "npm build",
 		"docs": "typedoc src/index.ts --theme node_modules/typedoc-twilio-theme/bin"
 	},
@@ -21,7 +21,7 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^14.14.20",
-		"tsup": "^3.11.0",
+		"esbuild": "^0.8.51",
 		"typedoc": "^0.20.20",
 		"typedoc-twilio-theme": "^1.0.1",
 		"typescript": "^4.1.3"
