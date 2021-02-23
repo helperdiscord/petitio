@@ -4,6 +4,10 @@
 	"description": "Fork of centra to support only what helper needs.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"!dist/*.tsbuildinfo"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/helperdiscord/centra.git"
@@ -21,6 +25,5 @@
 		"typedoc": "^0.20.20",
 		"typedoc-twilio-theme": "^1.0.1",
 		"typescript": "^4.1.3"
-	},
-	"dependencies": {}
+	}
 }
