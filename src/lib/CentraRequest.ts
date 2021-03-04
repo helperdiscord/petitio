@@ -9,11 +9,11 @@ import { CentraResponse } from './CentraResponse';
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export class CentraRequest {
-  public url: URL;
-  public data: string | Buffer | null = null;
-  public sendDataAs: 'form' | 'json' | 'buffer' | null = null;
-  public reqHeaders: { [header: string]: string } = {};
-  public coreOptions: RequestOptions = {};
+	public url: URL;
+	public data: string | Buffer | null = null;
+	public sendDataAs: 'form' | 'json' | 'buffer' | null = null;
+	public reqHeaders: { [header: string]: string } = {};
+	public coreOptions: RequestOptions = {};
 
 	/**
 	 * Creates an instance of CentraRequest.
@@ -46,7 +46,7 @@ export class CentraRequest {
 
 		return this;
 	}
-	
+
 	/**
 	 *
 	 *
@@ -56,7 +56,7 @@ export class CentraRequest {
 	 */
 	public path(relativePath: string): this {
 		this.url.pathname = path.join(this.url.pathname, relativePath);
-    
+
 		return this;
 	}
 
@@ -74,16 +74,16 @@ export class CentraRequest {
 
 		return this;
 	}
-	
+
 	/**
 	 *
 	 *
 	 * @param {(string | { [k: string]: string })} header
 	 * @param {string} [value]
-	 * @return {*} 
+	 * @return {*}  {this}
 	 * @memberof CentraRequest
 	 */
-	public header(header: string | { [k: string]: string }, value?: string) {
+	public header(header: string | { [k: string]: string }, value?: string): this {
 		if (typeof header === 'object') {
 			Object.keys(header).forEach(headerName => {
 				this.reqHeaders[headerName.toLowerCase()] = header[headerName];
@@ -153,7 +153,7 @@ export class CentraRequest {
 		const res = await this.send();
 		return res.text();
 	}
-	
+
 	/**
 	 *
 	 *
@@ -192,6 +192,10 @@ export class CentraRequest {
 				stream.on('error', (err: Error) => {
 					reject(err);
 				});
+
+				stream.on('aborted', () => {
+					reject(new Error('Server aborted request'))
+				})
 
 				stream.on('data', (chunk: any) => {
 					centraRes._addChunk(chunk);
