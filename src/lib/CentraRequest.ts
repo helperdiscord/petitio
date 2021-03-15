@@ -5,32 +5,9 @@ import qs from 'querystring';
 import { URL } from 'url';
 import { CentraResponse } from './CentraResponse';
 import Stream from 'stream';
-import { formDataIterator, getBoundary, isFormData, isBlob } from './FormDataUtil';
+import { formDataIterator, getBoundary, isFormData } from './FormDataUtil';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
-
-/**
- * Write a Body to a Node.js WritableStream (e.g. http.Request) object.
- *
- * @param {Stream.Writable} dest The stream to write to.
- * @param obj.body Body object from the Body instance.
- * @returns {void}
- */
-const writeToStream = (dest, { body }) => {
-	if (body === null) {
-		dest.end();
-	} else if (isBlob(body)) {
-		body.stream().pipe(dest);
-	} else if (Buffer.isBuffer(body)) {
-		dest.write(body);
-		dest.end();
-	} else if (typeof body === 'string') {
-		dest.write(body);
-		dest.end();
-	} else {
-		body.pipe(dest);
-	}
-};
 
 export class CentraRequest {
 	public url: URL;
@@ -238,7 +215,14 @@ export class CentraRequest {
 			req.on('error', (err: Error) => {
 				reject(err);
 			});
-			writeToStream(req, { body: this.data })
+
+			if (this.data instanceof Stream) {
+				this.data.pipe(req);
+			} else {
+				if (this.data) req.write(this.data);
+			}
+
+			req.end();
 		});
 	}
 }
