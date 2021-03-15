@@ -3,7 +3,6 @@ import http, { ClientRequest, IncomingMessage } from 'http';
 import https, { RequestOptions } from 'https';
 import qs from 'querystring';
 import { URL } from 'url';
-import FormData from 'form-data';
 import { CentraResponse } from './CentraResponse';
 import Stream from 'stream';
 import { formDataIterator, getBoundary, isFormData } from './FormDataUtil';
