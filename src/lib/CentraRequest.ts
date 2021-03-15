@@ -216,7 +216,6 @@ export class CentraRequest {
 				reject(err);
 			});
 
-			if (this.data) req.write(this.data);
 			if (this.data instanceof FormData) {
 				this.data.pipe(req);
 			} else {
