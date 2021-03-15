@@ -223,8 +223,10 @@ export class CentraRequest {
 				//@ts-ignore
 				this.data.pipe(req);
 			} else {
-				req.write(this.data);
-				req.end();
+				if (this.data) {
+					req.write(this.data);
+					req.end();
+				}
 			}
 		});
 	}
