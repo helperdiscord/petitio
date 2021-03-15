@@ -5,14 +5,12 @@ import qs from 'querystring';
 import { URL } from 'url';
 import FormData from 'form-data';
 import { CentraResponse } from './CentraResponse';
-import Stream from 'stream';
-import { formDataIterator, getBoundary, isFormData } from './FormDataUtil';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export class CentraRequest {
 	public url: URL;
-	public data: string | Buffer | Stream | null = null;
+	public data: string | Buffer | FormData | null = null;
 	public sendDataAs: 'form' | 'json' | 'buffer' | 'fd' | null = null;
 	public reqHeaders: { [header: string]: string } = {};
 	public coreOptions: RequestOptions = {};
@@ -72,7 +70,8 @@ export class CentraRequest {
 	 */
 	public body(data: any, sendAs?: 'json' | 'buffer' | 'form' | 'fd'): this {
 		this.sendDataAs = typeof data === 'object' && !sendAs && !Buffer.isBuffer(data) ? 'json' : sendAs ? sendAs.toLowerCase() as 'fd' | 'buffer' | 'json' | 'form' : 'buffer';
-		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : isFormData(data) ? Stream.Readable.from(formDataIterator(data, `CentraFormDataBoundary${getBoundary()}`)) : data;
+		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : data;
+
 		return this;
 	}
 
@@ -170,7 +169,7 @@ export class CentraRequest {
 					else if (this.sendDataAs === 'form') this.reqHeaders['content-type'] = 'application/x-www-form-urlencoded';
 				}
 
-				if (!(this.data instanceof Stream) && !this.reqHeaders.hasOwnProperty('content-length')) this.reqHeaders['content-length'] = Buffer.byteLength(this.data) as unknown as string;
+				if (!(this.data instanceof FormData) && !this.reqHeaders.hasOwnProperty('content-length')) this.reqHeaders['content-length'] = Buffer.byteLength(this.data) as unknown as string;
 			}
 
 			const options = {
@@ -217,7 +216,7 @@ export class CentraRequest {
 				reject(err);
 			});
 
-			if (this.data instanceof Stream) {
+			if (this.data instanceof FormData) {
 				this.data.pipe(req);
 			} else {
 				if (this.data) req.write(this.data);
