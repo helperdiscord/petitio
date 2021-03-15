@@ -72,7 +72,7 @@ export class CentraRequest {
 	public body(data: any, sendAs?: 'json' | 'buffer' | 'form' | 'fd'): this {
 		this.sendDataAs = typeof data === 'object' && !sendAs && !Buffer.isBuffer(data) ? 'json' : sendAs ? sendAs.toLowerCase() as 'fd' | 'buffer' | 'json' | 'form' : 'buffer';
 		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : isFormData(data) || this.sendDataAs === 'fd' ? data : data;
-		if (data.getHeaders) {
+		if (sendAs && sendAs === 'fd') {
 			Object.assign(this.reqHeaders, data.getHeaders());
 		}
 		return this;
