@@ -5,32 +5,9 @@ import qs from 'querystring';
 import { URL } from 'url';
 import { CentraResponse } from './CentraResponse';
 import Stream from 'stream';
-import { formDataIterator, getBoundary, isFormData, isBlob } from './FormDataUtil';
+import { formDataIterator, getBoundary, isFormData, getFormDataLength } from './FormDataUtil';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
-
-/**
- * Write a Body to a Node.js WritableStream (e.g. http.Request) object.
- *
- * @param {Stream.Writable} dest The stream to write to.
- * @param obj.body Body object from the Body instance.
- * @returns {void}
- */
-const writeToStream = (dest, { body }) => {
-	if (body === null) {
-		dest.end();
-	} else if (isBlob(body)) {
-		body.stream().pipe(dest);
-	} else if (Buffer.isBuffer(body)) {
-		dest.write(body);
-		dest.end();
-	} else if (typeof body === 'string') {
-		dest.write(body);
-		dest.end();
-	} else {
-		body.pipe(dest);
-	}
-};
 
 export class CentraRequest {
 	public url: URL;
@@ -92,9 +69,9 @@ export class CentraRequest {
 	 * @return {*}  {this}
 	 * @memberof CentraRequest
 	 */
-	public body(data: any, sendAs?: 'json' | 'buffer' | 'form' | 'fd'): this {
+	public body(data: any, sendAs?: 'json' | 'buffer' | 'form' | 'fd' ): this {
 		this.sendDataAs = typeof data === 'object' && !sendAs && !Buffer.isBuffer(data) ? 'json' : sendAs ? sendAs.toLowerCase() as 'fd' | 'buffer' | 'json' | 'form' : 'buffer';
-		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : isFormData(data) ? Stream.Readable.from(formDataIterator(data, `CentraFormDataBoundary${getBoundary()}`)) : data;
+		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : isFormData(data) || this.sendDataAs === 'fd' ? Stream.Readable.from(formDataIterator(data, `CentraFormDataBoundary${getBoundary()}`)) : data;
 		return this;
 	}
 
@@ -238,7 +215,15 @@ export class CentraRequest {
 			req.on('error', (err: Error) => {
 				reject(err);
 			});
-			writeToStream(req, { body: this.data })
+
+			//@ts-ignore
+			if (this.data?.pipe) {
+				//@ts-ignore
+				this.data.pipe(req);
+			} else {
+				req.write(this.data);
+				req.end();
+			}
 		});
 	}
 }
