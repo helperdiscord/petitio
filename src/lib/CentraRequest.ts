@@ -3,15 +3,15 @@ import http, { ClientRequest, IncomingMessage } from 'http';
 import https, { RequestOptions } from 'https';
 import qs from 'querystring';
 import { URL } from 'url';
-
+import FormData from '@discordjs/form-data';
 import { CentraResponse } from './CentraResponse';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export class CentraRequest {
 	public url: URL;
-	public data: string | Buffer | null = null;
-	public sendDataAs: 'form' | 'json' | 'buffer' | null = null;
+	public data: string | Buffer | FormData | null = null;
+	public sendDataAs: 'form' | 'json' | 'buffer' | 'fd' | null = null;
 	public reqHeaders: { [header: string]: string } = {};
 	public coreOptions: RequestOptions = {};
 
@@ -64,12 +64,12 @@ export class CentraRequest {
 	 *
 	 *
 	 * @param {*} data
-	 * @param {('json' | 'buffer' | 'form')} [sendAs]
+	 * @param {('json' | 'buffer' | 'form' | 'fd')} [sendAs]
 	 * @return {*}  {this}
 	 * @memberof CentraRequest
 	 */
-	public body(data: any, sendAs?: 'json' | 'buffer' | 'form'): this {
-		this.sendDataAs = typeof data === 'object' && !sendAs && !Buffer.isBuffer(data) ? 'json' : sendAs ? sendAs.toLowerCase() as 'buffer' | 'json' | 'form' : 'buffer';
+	public body(data: any, sendAs?: 'json' | 'buffer' | 'form' | 'fd'): this {
+		this.sendDataAs = typeof data === 'object' && !sendAs && !Buffer.isBuffer(data) ? 'json' : sendAs ? sendAs.toLowerCase() as 'fd' | 'buffer' | 'json' | 'form' : 'buffer';
 		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : data;
 
 		return this;
@@ -169,7 +169,7 @@ export class CentraRequest {
 					else if (this.sendDataAs === 'form') this.reqHeaders['content-type'] = 'application/x-www-form-urlencoded';
 				}
 
-				if (!this.reqHeaders.hasOwnProperty('content-length')) this.reqHeaders['content-length'] = Buffer.byteLength(this.data) as unknown as string;
+				if (!(this.data instanceof FormData) && !this.reqHeaders.hasOwnProperty('content-length')) this.reqHeaders['content-length'] = Buffer.byteLength(this.data) as unknown as string;
 			}
 
 			const options = {
@@ -217,6 +217,11 @@ export class CentraRequest {
 			});
 
 			if (this.data) req.write(this.data);
+			if (this.data instanceof FormData) {
+				this.data.pipe(req);
+			} else {
+				if (this.data) req.write(this.data);
+			}
 
 			req.end();
 		});
