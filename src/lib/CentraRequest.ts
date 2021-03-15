@@ -69,12 +69,9 @@ export class CentraRequest {
 	 * @return {*}  {this}
 	 * @memberof CentraRequest
 	 */
-	public body(data: any, sendAs?: 'json' | 'buffer' | 'form' | 'fd'): this {
+	public body(data: any, sendAs?: 'json' | 'buffer' | 'form' | 'fd' ): this {
 		this.sendDataAs = typeof data === 'object' && !sendAs && !Buffer.isBuffer(data) ? 'json' : sendAs ? sendAs.toLowerCase() as 'fd' | 'buffer' | 'json' | 'form' : 'buffer';
-		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : isFormData(data) || this.sendDataAs === 'fd' ? data : data;
-		if (data.getHeaders) {
-			Object.assign(this.reqHeaders, data.getHeaders());
-		}
+		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : isFormData(data) || this.sendDataAs === 'fd' ? Stream.Readable.from(formDataIterator(data, `CentraFormDataBoundary${getBoundary()}`)) : data;
 		return this;
 	}
 
@@ -219,7 +216,8 @@ export class CentraRequest {
 				reject(err);
 			});
 
-			if (this.sendDataAs === 'fd') {
+			//@ts-ignore
+			if (this.data?.pipe) {
 				//@ts-ignore
 				this.data.pipe(req);
 			} else {
