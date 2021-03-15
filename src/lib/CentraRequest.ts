@@ -3,7 +3,7 @@ import http, { ClientRequest, IncomingMessage } from 'http';
 import https, { RequestOptions } from 'https';
 import qs from 'querystring';
 import { URL } from 'url';
-import FormData from 'form-data';
+import FormData from '@discordjs/form-data';
 import { CentraResponse } from './CentraResponse';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
