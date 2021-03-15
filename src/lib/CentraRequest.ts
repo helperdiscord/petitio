@@ -3,14 +3,14 @@ import http, { ClientRequest, IncomingMessage } from 'http';
 import https, { RequestOptions } from 'https';
 import qs from 'querystring';
 import { URL } from 'url';
-import FormData from '@discordjs/form-data';
+import Stream from 'stream';
 import { CentraResponse } from './CentraResponse';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export class CentraRequest {
 	public url: URL;
-	public data: string | Buffer | FormData | null = null;
+	public data: string | Buffer | Stream | null = null;
 	public sendDataAs: 'form' | 'json' | 'buffer' | 'fd' | null = null;
 	public reqHeaders: { [header: string]: string } = {};
 	public coreOptions: RequestOptions = {};
@@ -169,7 +169,7 @@ export class CentraRequest {
 					else if (this.sendDataAs === 'form') this.reqHeaders['content-type'] = 'application/x-www-form-urlencoded';
 				}
 
-				if (!(this.data instanceof FormData) && !this.reqHeaders.hasOwnProperty('content-length')) this.reqHeaders['content-length'] = Buffer.byteLength(this.data) as unknown as string;
+				if (!(this.data instanceof Stream) && !this.reqHeaders.hasOwnProperty('content-length')) this.reqHeaders['content-length'] = Buffer.byteLength(this.data) as unknown as string;
 			}
 
 			const options = {
@@ -216,14 +216,14 @@ export class CentraRequest {
 				reject(err);
 			});
 
-			if (this.data) req.write(this.data);
-			if (this.data instanceof FormData) {
+			if (this.data instanceof Stream) {
 				this.data.pipe(req);
 			} else {
-				if (this.data) req.write(this.data);
+				if (this.data) {
+					req.write(this.data);
+					req.end();
+				}
 			}
-
-			req.end();
 		});
 	}
 }
