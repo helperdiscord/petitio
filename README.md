@@ -85,6 +85,7 @@ These results were procured using [this](https://github.com/helperdiscord/http-b
 
 ```
 Results (i7-7700k, CPU governor: performance):
+
 got - promise x 2,770 ops/sec ±6.67% (71 runs sampled)
 request - callback x 4,888 ops/sec ±7.46% (74 runs sampled)
 node-fetch - promise x 5,457 ops/sec ±3.33% (74 runs sampled)
