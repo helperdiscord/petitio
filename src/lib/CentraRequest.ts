@@ -1,9 +1,8 @@
-import path from 'path';
+import { join } from 'path';
 import http, { ClientRequest, IncomingMessage } from 'http';
 import https, { RequestOptions } from 'https';
-import qs from 'querystring';
+import { stringify } from 'querystring';
 import { URL } from 'url';
-import Stream from 'stream';
 import { CentraResponse } from './CentraResponse';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
@@ -55,7 +54,7 @@ export class CentraRequest {
 	 * @memberof CentraRequest
 	 */
 	public path(relativePath: string): this {
-		this.url.pathname = path.join(this.url.pathname, relativePath);
+		this.url.pathname = join(this.url.pathname, relativePath);
 
 		return this;
 	}
@@ -70,7 +69,7 @@ export class CentraRequest {
 	 */
 	public body(data: any, sendAs?: 'json' | 'buffer' | 'form'): this {
 		this.sendDataAs = typeof data === 'object' && !sendAs && !Buffer.isBuffer(data) ? 'json' : sendAs ? sendAs.toLowerCase() as 'buffer' | 'json' | 'form' : 'buffer';
-		this.data = this.sendDataAs === 'form' ? qs.stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : data;
+		this.data = this.sendDataAs === 'form' ? stringify(data) : this.sendDataAs === 'json' ? JSON.stringify(data) : data;
 
 		return this;
 	}
@@ -220,7 +219,7 @@ export class CentraRequest {
 				req.write(this.data);
 			}
 			req.end();
-			
+
 		});
 	}
 }
