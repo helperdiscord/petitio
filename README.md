@@ -76,6 +76,8 @@ node-fetch | [![node-fetch package size](https://packagephobia.now.sh/badge?p=no
 phin | [![phin package size](https://packagephobia.now.sh/badge?p=phin)](https://packagephobia.now.sh/result?p=phin)
 @helperdiscord/centra | [![@helperdiscord/centra package size](https://packagephobia.now.sh/badge?p=@helperdiscord/centra)](https://packagephobia.now.sh/result?p=@helperdiscord/centra)
 
+---
+
 #### Here's a performance comparison of @helperdiscord/centra vs other http libraries
 
 These results were procured using [this](https://github.com/helperdiscord/http-benchmarks)
