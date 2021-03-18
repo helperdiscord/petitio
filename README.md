@@ -60,9 +60,9 @@ const res = await req('https://discord.com/api/gateway').json<Gateway>();
 
 ## @helperdiscord/centra vs other http libraries
 
-Here you can see how efficient @helperdiscord/centra is compared in bundle size to other libraries
+#### Here's a size comparison table:
 
-Here's a size comparison table:
+Here you can see how efficient @helperdiscord/centra is compared in bundle size to other libraries
 
 Package | Size
 --- | ---
@@ -75,3 +75,19 @@ r2 | [![r2 package size](https://packagephobia.now.sh/badge?p=r2)](https://packa
 node-fetch | [![node-fetch package size](https://packagephobia.now.sh/badge?p=node-fetch)](https://packagephobia.now.sh/result?p=node-fetch)
 phin | [![phin package size](https://packagephobia.now.sh/badge?p=phin)](https://packagephobia.now.sh/result?p=phin)
 @helperdiscord/centra | [![@helperdiscord/centra package size](https://packagephobia.now.sh/badge?p=@helperdiscord/centra)](https://packagephobia.now.sh/result?p=@helperdiscord/centra)
+
+#### Here's a performance comparison of @helperdiscord/centra vs other http libraries
+
+These results were procured using [this](https://github.com/helperdiscord/http-benchmarks)
+
+
+```
+Results (i7-7700k, CPU governor: performance):
+got - promise x 2,770 ops/sec ±6.67% (71 runs sampled)
+request - callback x 4,888 ops/sec ±7.46% (74 runs sampled)
+node-fetch - promise x 5,457 ops/sec ±3.33% (74 runs sampled)
+centra - promise x 8,263 ops/sec ±2.10% (84 runs sampled)
+https - stream x 7,453 ops/sec ±3.19% (78 runs sampled)
+@helperdiscord/centra - promise x 8,202 ops/sec ±1.30% (82 runs sampled)
+Fastest is @helperdiscord/centra - promise
+```
