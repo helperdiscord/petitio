@@ -123,6 +123,21 @@ export class CentraRequest {
 	/**
 	 *
 	 *
+	 * @template T
+	 * @param {T} key
+	 * @param {RequestOptions[T]} value
+	 * @return {*}  {this}
+	 * @memberof CentraRequest
+	 */
+	public option<T extends keyof RequestOptions>(key: T, value: RequestOptions[T]): this {
+		this.coreOptions[key] = value
+
+		return this
+	}
+
+	/**
+	 *
+	 *
 	 * @return {*}  {Promise<any>}
 	 * @memberof CentraRequest
 	 */
@@ -162,11 +177,7 @@ export class CentraRequest {
 	public send(): Promise<CentraResponse> {
 		return new Promise((resolve, reject) => {
 			if (this.data) {
-				if (!this.reqHeaders.hasOwnProperty('content-type')) {
-					if (this.sendDataAs === 'json') this.reqHeaders['content-type'] = 'application/json';
-
-					else if (this.sendDataAs === 'form') this.reqHeaders['content-type'] = 'application/x-www-form-urlencoded';
-				}
+				if (!this.reqHeaders.hasOwnProperty('content-type') && ['json', 'form'].includes(this.sendDataAs)) this.reqHeaders['content-type'] = this.sendDataAs === 'json' ? 'application/json' : 'application/x-www-form-urlencoded';
 
 				if (!this.reqHeaders.hasOwnProperty('content-length')) this.reqHeaders['content-length'] = Buffer.byteLength(this.data) as unknown as string;
 			}
