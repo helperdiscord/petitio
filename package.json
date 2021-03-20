@@ -1,7 +1,7 @@
 {
 	"name": "@helperdiscord/centra",
 	"version": "2.4.0",
-	"description": "Fork of centra to support only what helper needs.",
+	"description": "Zero-dependency HTTP library designed to be simple, fast, and type-strong.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": [
@@ -13,7 +13,9 @@
 		"url": "https://github.com/helperdiscord/centra.git"
 	},
 	"scripts": {
-		"build": "tsc --emitDeclarationOnly --outDir dist && esbuild src/*.ts --bundle --minify --platform=node --outdir=dist --tsconfig=tsconfig.json",
+		"build": "run-p build:*",
+		"build:main": "esbuild src/*.ts --bundle --minify --platform=node --outdir=dist --tsconfig=tsconfig.json",
+		"build:types": "tsc --emitDeclarationOnly --outDir dist",
 		"prepack": "npm build",
 		"docs": "typedoc src/index.ts"
 	},
@@ -22,6 +24,7 @@
 	"devDependencies": {
 		"@types/node": "^14.14.35",
 		"esbuild": "^0.9.3",
+		"npm-run-all": "^4.1.5",
 		"typedoc": "^0.20.20",
 		"typescript": "^4.2.3"
 	}
