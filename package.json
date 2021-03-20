@@ -1,5 +1,5 @@
 {
-	"name": "@helperdiscord/centra",
+	"name": "petitio",
 	"version": "2.4.0",
 	"description": "Zero-dependency HTTP library designed to be simple, fast, and type-strong.",
 	"main": "dist/index.js",
@@ -10,7 +10,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/helperdiscord/centra.git"
+		"url": "https://github.com/helperdiscord/petitio.git"
 	},
 	"scripts": {
 		"build": "run-p build:*",
@@ -19,7 +19,7 @@
 		"prepack": "npm build",
 		"docs": "typedoc src/index.ts"
 	},
-	"author": "Vetlix <vetlixk@gmail.com> doge <doge@helper.wtf>",
+	"author": "Vetlix <vetlixk@gmail.com> doge <doge@helper.wtf> Nytelife26 <nytelife@protonmail.com> (https://github.com/Nytelife26)",
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^14.14.35",
