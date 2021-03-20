@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-        npm config set //registry.npmjs.org/:_authToken $TOKEN 
+        npm config set //registry.npmjs.org/:_authToken $TOKEN
         npm install
         npm run build
         npm publish
