@@ -31,7 +31,7 @@ export class CentraRequest {
 
 		return this;
 	}
-	
+
 	/**
 	 *
 	 *
@@ -41,7 +41,7 @@ export class CentraRequest {
 	 * @memberof CentraRequest
 	 */
 	public client(client: Client, keepAlive?: boolean): this {
-		this.client = client;
+		this.kClient = client;
 
 		if (keepAlive) this.keepClient = true;
 
