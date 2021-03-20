@@ -1,7 +1,11 @@
 # @helperdiscord/centra
 
-A cool library to use for rest requests in nodejs :) <a href="https://helperdiscord.github.io/centra/">docs</a>
+A zero-dependency fork of [Centra] designed to be simple, fast, and type-strong.
 
+Useful links:
+- [Docs](https://helperdiscord.github.io/centra)
+- [Usage examples](USAGE.md)
+- [Benchmarks / comparison](PERFORMANCE.md)
 ## Examples
 
 Basic GET Request
