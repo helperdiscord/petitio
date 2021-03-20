@@ -1,6 +1,6 @@
 {
 	"name": "@helperdiscord/centra",
-	"version": "2.4.0",
+	"version": "2.4.1",
 	"description": "Zero-dependency HTTP/S library designed to be simple, fast, and type-strong.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -13,7 +13,7 @@
 		"url": "https://github.com/helperdiscord/centra.git"
 	},
 	"scripts": {
-		"build": "tsc --emitDeclarationOnly --outDir dist && esbuild src/*.ts --bundle --minify --platform=node --outdir=dist --tsconfig=tsconfig.json",
+		"build": "tsc --emitDeclarationOnly --outDir dist && esbuild src/*.ts --minify --platform=node --outdir=dist --tsconfig=tsconfig.json",
 		"prepack": "npm build",
 		"docs": "typedoc src/index.ts"
 	},
