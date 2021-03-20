@@ -1,7 +1,7 @@
 {
 	"name": "@helperdiscord/centra",
 	"version": "2.4.0",
-	"description": "Fork of centra to support only what helper needs.",
+	"description": "Zero-dependency HTTP/S library designed to be simple, fast, and type-strong.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": [
