@@ -4,7 +4,7 @@ import https, { RequestOptions } from 'https';
 import { stringify } from 'querystring';
 import { URL } from 'url';
 import { CentraResponse } from './CentraResponse';
-
+import 'undici';
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export class CentraRequest {
