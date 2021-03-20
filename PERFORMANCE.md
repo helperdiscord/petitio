@@ -1,6 +1,6 @@
 # Package size
 
-Here you can see how efficient `@helperdiscord/centra` is as opposed to other
+Here you can see how efficient `petito` is as opposed to other
 libraries, in terms of bundle size.
 
 | Package          | Size                                                                                                                                              |
