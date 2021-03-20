@@ -2,6 +2,7 @@ import { join } from 'path';
 import { stringify } from 'querystring';
 import { URL } from 'url';
 import { CentraResponse } from './CentraResponse';
+import type { IncomingHttpHeaders } from 'http'
 import Client from 'undici/lib/core/client';
 import type ClientType from 'undici/types/client';
 
@@ -11,9 +12,11 @@ export class CentraRequest {
 	public url: URL;
 	public data: string | Buffer | null = null;
 	public sendDataAs: 'form' | 'json' | 'buffer' | null = null;
-	public reqHeaders: { [header: string]: string } = {};
+	public reqHeaders: IncomingHttpHeaders = {};
 	public coreOptions: ClientType.Options = {};
 	public timeoutOptions: { bodyTimeout?: number, headersTimeout?: number, keepAliveTimeout?: number } = {};
+	public kClient?: Client;
+	public keepClient?: boolean;
 
 	/**
 	 * Creates an instance of CentraRequest.
@@ -25,6 +28,22 @@ export class CentraRequest {
 		this.url = typeof url === 'string' ? new URL(url) : url;
 
 		if (!['http:', 'https:'].includes(this.url.protocol)) throw new Error(`Bad URL protocol: ${this.url.protocol}`);
+
+		return this;
+	}
+	
+	/**
+	 *
+	 *
+	 * @param {Client} client
+	 * @param {boolean} [keepAlive]
+	 * @return {*}  {this}
+	 * @memberof CentraRequest
+	 */
+	public client(client: Client, keepAlive?: boolean): this {
+		this.client = client;
+
+		if (keepAlive) this.keepClient = true;
 
 		return this;
 	}
@@ -196,17 +215,18 @@ export class CentraRequest {
 				body: this.data
 			};
 
-			const client = new Client(`${this.url.protocol}//${this.url.host}`, this.coreOptions);
+			const client = this.kClient ?? new Client(this.url.origin, this.coreOptions);
 
 			let centraRes: CentraResponse = new CentraResponse();
 
 			client.dispatch(options, {
 				onData: ((data: Buffer) => {
 					return void centraRes._addChunk(data);
+
 				}),
 				onError: ((err: Error) => reject(err)),
 				onComplete: () => {
-					client.close();
+					if (!this.keepClient) client.close();
 					resolve(centraRes)
 				},
 				onConnect: () => { },
