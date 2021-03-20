@@ -3,7 +3,7 @@
 ### Basic GET Request
 
 ```js
-const req = require("@helperdiscord/centra");
+const req = require("petitio");
 
 const res = await req("https://discord.com/api/gateway").json()
 console.log(res);
@@ -14,7 +14,7 @@ console.log(res);
 ### Simple POST Request with payload
 
 ```js
-const req = require("@helperdiscord/centra");
+const req = require("petitio");
 
 const res = await req("https://discord.com/api/channels/ID/messages", "POST")
 	.body({ content: "hi" })
@@ -45,7 +45,7 @@ console.log(res);
 ### Type casting JSON responses
 
 ```ts
-import req from "@helperdiscord/centra";
+import req from "petitio";
 
 type Gateway {
     url: string
