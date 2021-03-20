@@ -2,10 +2,9 @@ export class CentraResponse {
 	public body: Buffer = Buffer.alloc(0);
 	public headers: {} = {};
 	public statusCode: number;
-
+	
 	/**
 	 * Creates an instance of CentraResponse.
-	 * @param {IncomingMessage} coreRes
 	 * @memberof CentraResponse
 	 */
 	constructor() { }
