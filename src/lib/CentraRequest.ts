@@ -175,7 +175,12 @@ export class CentraRequest {
 		const res = await this.send();
 		return res.text();
 	}
-
+	/**
+	 *
+	 *
+	 * @return {*}  {Promise<CentraResponse>}
+	 * @memberof CentraRequest
+	 */
 	public send(): Promise<CentraResponse> {
 		return new Promise((resolve, reject) => {
 			if (this.data) {
