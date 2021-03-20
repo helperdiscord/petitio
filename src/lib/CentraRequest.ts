@@ -1,10 +1,10 @@
 import { join } from 'path';
-import http, { ClientRequest, IncomingMessage } from 'http';
-import https, { RequestOptions } from 'https';
 import { stringify } from 'querystring';
 import { URL } from 'url';
 import { CentraResponse } from './CentraResponse';
-import 'undici';
+import Client from 'undici/lib/core/client';
+import type ClientType from 'undici/types/client';
+
 export type HTTPMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export class CentraRequest {
@@ -12,7 +12,8 @@ export class CentraRequest {
 	public data: string | Buffer | null = null;
 	public sendDataAs: 'form' | 'json' | 'buffer' | null = null;
 	public reqHeaders: { [header: string]: string } = {};
-	public coreOptions: RequestOptions = {};
+	public coreOptions: ClientType.Options = {};
+	public timeoutOptions: { bodyTimeout?: number, headersTimeout?: number, keepAliveTimeout?: number } = {};
 
 	/**
 	 * Creates an instance of CentraRequest.
@@ -22,6 +23,8 @@ export class CentraRequest {
 	 */
 	constructor(url: string | URL, public httpMethod: HTTPMethod = 'GET') {
 		this.url = typeof url === 'string' ? new URL(url) : url;
+
+		if (!['http:', 'https:'].includes(this.url.protocol)) throw new Error(`Bad URL protocol: ${this.url.protocol}`);
 
 		return this;
 	}
@@ -110,12 +113,17 @@ export class CentraRequest {
 	/**
 	 *
 	 *
-	 * @param {number} timeout
+	 * @param {(number | string)} timeout
+	 * @param {number} [time]
 	 * @return {*}  {this}
 	 * @memberof CentraRequest
 	 */
-	public timeout(timeout: number): this {
-		this.coreOptions.timeout = timeout;
+	public timeout(timeout: number | string, time?: number): this {
+		if (typeof timeout === 'string') {
+			this.timeoutOptions[timeout] = time;
+		} else {
+			this.timeoutOptions.bodyTimeout = timeout;
+		}
 
 		return this;
 	}
@@ -125,11 +133,11 @@ export class CentraRequest {
 	 *
 	 * @template T
 	 * @param {T} key
-	 * @param {RequestOptions[T]} value
+	 * @param {ClientType.Options[T]} value
 	 * @return {*}  {this}
 	 * @memberof CentraRequest
 	 */
-	public option<T extends keyof RequestOptions>(key: T, value: RequestOptions[T]): this {
+	public option<T extends keyof ClientType.Options>(key: T, value: ClientType.Options[T]): this {
 		this.coreOptions[key] = value
 
 		return this
@@ -168,12 +176,6 @@ export class CentraRequest {
 		return res.text();
 	}
 
-	/**
-	 *
-	 *
-	 * @return {*}  {Promise<CentraResponse>}
-	 * @memberof CentraRequest
-	 */
 	public send(): Promise<CentraResponse> {
 		return new Promise((resolve, reject) => {
 			if (this.data) {
@@ -182,55 +184,45 @@ export class CentraRequest {
 				if (!this.reqHeaders.hasOwnProperty('content-length')) this.reqHeaders['content-length'] = Buffer.byteLength(this.data) as unknown as string;
 			}
 
-			const options = {
-				protocol: this.url.protocol,
-				host: this.url.hostname,
-				port: this.url.port,
+			const options: Client.RequestOptions = {
 				path: this.url.pathname + this.url.search,
 				method: this.httpMethod,
 				headers: this.reqHeaders,
-				...this.coreOptions
+				body: this.data
 			};
 
-			let req: ClientRequest;
+			const client = new Client(`${this.url.protocol}//${this.url.host}`, this.coreOptions);
 
-			const resHandler = (res: IncomingMessage) => {
-				let stream = res;
+			let centraRes: CentraResponse = new CentraResponse();
 
-				const centraRes = new CentraResponse(res);
-
-				stream.on('error', (err: Error) => {
-					reject(err);
-				});
-
-				stream.on('aborted', () => {
-					reject(new Error('Server aborted request'))
-				})
-
-				stream.on('data', (chunk: any) => {
-					centraRes._addChunk(chunk);
-				});
-
-				stream.on('end', () => {
-					resolve(centraRes);
-				});
-			};
-
-			if (this.url.protocol === 'http:') req = http.request(options, resHandler);
-
-			else if (this.url.protocol === 'https:') req = https.request(options, resHandler);
-
-			else throw new Error(`Bad URL protocol: ${this.url.protocol}`);
-
-			req.on('error', (err: Error) => {
-				reject(err);
-			});
-
-			if (this.data) {
-				req.write(this.data);
-			}
-			req.end();
-
+			client.dispatch(options, {
+				onData: (data => {
+					return void centraRes._addChunk(data);
+				}),
+				onError: (err => reject(err)),
+				onComplete: () => {
+					client.close();
+					resolve(centraRes)
+				},
+				onConnect: () => { },
+				onHeaders: (statusCode, headers, resume) => {
+					centraRes.statusCode = statusCode;
+					for (let i = 0; i < headers.length; i += 2) {
+						const key = headers[i].toLowerCase()
+						let val = centraRes.headers[key.toString()]
+						if (!val) {
+							centraRes.headers[key] = headers[i + 1]
+						} else {
+							if (!Array.isArray(val)) {
+								val = [val]
+								centraRes.headers[key] = val
+							}
+							val.push(headers[i + 1])
+						}
+					}
+					return void resume();
+				}
+			})
 		});
 	}
 }

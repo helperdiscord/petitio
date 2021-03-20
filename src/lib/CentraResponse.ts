@@ -1,19 +1,14 @@
-import { IncomingMessage } from 'http';
-
 export class CentraResponse {
 	public body: Buffer = Buffer.alloc(0);
-	public headers: IncomingMessage['headers'];
-	public statusCode: IncomingMessage['statusCode'];
+	public headers: {} = {};
+	public statusCode: number;
 
 	/**
 	 * Creates an instance of CentraResponse.
 	 * @param {IncomingMessage} coreRes
 	 * @memberof CentraResponse
 	 */
-	constructor(public coreRes: IncomingMessage) {
-		this.headers = coreRes.headers;
-		this.statusCode = coreRes.statusCode;
-	}
+	constructor() { }
 
 	/**
 	 *
