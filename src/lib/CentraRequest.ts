@@ -201,16 +201,16 @@ export class CentraRequest {
 			let centraRes: CentraResponse = new CentraResponse();
 
 			client.dispatch(options, {
-				onData: (data => {
+				onData: ((data: Buffer) => {
 					return void centraRes._addChunk(data);
 				}),
-				onError: (err => reject(err)),
+				onError: ((err: Error) => reject(err)),
 				onComplete: () => {
 					client.close();
 					resolve(centraRes)
 				},
 				onConnect: () => { },
-				onHeaders: (statusCode, headers, resume) => {
+				onHeaders: (statusCode: number, headers: string[], resume: () => void) => {
 					centraRes.statusCode = statusCode;
 					for (let i = 0; i < headers.length; i += 2) {
 						const key = headers[i].toLowerCase()
