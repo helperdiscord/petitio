@@ -32,12 +32,12 @@ export class CentraRequest {
 	/**
 	 *
 	 *
-	 * @param {string} key
+	 * @param {(string | object)} key
 	 * @param {*} value
 	 * @return {*}  {this}
 	 * @memberof CentraRequest
 	 */
-	public query(key: string, value: any): this {
+	public query(key: string | object, value: any): this {
 		if (typeof key === 'object') {
 			Object.keys(key).forEach((queryKey: string) => {
 				this.url.searchParams.append(queryKey, key[queryKey]);
