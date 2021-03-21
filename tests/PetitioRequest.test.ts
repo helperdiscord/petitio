@@ -3,6 +3,8 @@ import { Client } from "undici";
 /* eslint-disable @typescript-eslint/naming-convention */
 import { PetitioRequest } from "../src/lib/PetitioRequest";
 import qs from "querystring";
+// eslint-disable-next-line sort-imports
+import { URL as NURL } from "url";
 // eslint-disable-next-line
 describe("PetitioRequest", () => {
 	describe("Query Params", () => {
@@ -207,7 +209,7 @@ describe("PetitioRequest", () => {
 		});
 	});
 
-	describe("WRONG PROTOCOL", () => {
+	describe("CONSTRUCTOR", () => {
 		test("CHECK THAT passed url DIDNT MATCH ALLOWED protocols", () => {
 			const URL = "wss://gateway.discord.gg";
 
@@ -216,7 +218,16 @@ describe("PetitioRequest", () => {
 				const request = new PetitioRequest(URL);
 			};
 
+			expect(func).toThrow("Bad URL protocol: wss:");
 			expect(func).toThrow(Error);
+		});
+		test("CHECK THAT passed url DIDNT MATCH ALLOWED protocols", () => {
+			const URL = new NURL("https://helper.wtf");
+
+			// eslint-disable-next-line func-style
+			const request = new PetitioRequest(URL);
+
+			expect(request.url instanceof NURL).toBeTruthy();
 		});
 	});
 });
