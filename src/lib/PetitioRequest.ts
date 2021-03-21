@@ -8,20 +8,6 @@ import { stringify } from "querystring";
 
 export type HTTPMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 
-export function parseHeaders(headers: string[], res: PetitioResponse): any {
-	for (let idx = 1; idx < headers.length; idx += 2) {
-		const key = headers[idx - 1].toLowerCase();
-		let val = res.headers[key.toString()];
-		if (!val) res.headers[key] = headers[idx];
-		else {
-			if (!Array.isArray(val)) {
-				val = [val];
-				res.headers[key] = val;
-			}
-			val.push(headers[idx]);
-		}
-	}
-}
 
 export class PetitioRequest {
 	public url: URL;
@@ -85,8 +71,6 @@ export class PetitioRequest {
 	}
 
 	/**
-	 *
-	 *
 	 * @param {*} data
 	 * @param {("json" | "form")} [sendAs]
 	 * @return {*}  {this}
@@ -107,8 +91,6 @@ export class PetitioRequest {
 	}
 
 	/**
-	 *
-	 *
 	 * @param {(string | { [k: string]: string })} header
 	 * @param {string} [value]
 	 * @return {*}  {this}
@@ -218,7 +200,7 @@ export class PetitioRequest {
 				onConnect: () => null,
 				onHeaders: (statusCode: number, headers: string[], resume: () => void) => {
 					res.statusCode = statusCode;
-					parseHeaders(headers, res);
+					res._parseHeaders(headers);
 					resume();
 				}
 			});
