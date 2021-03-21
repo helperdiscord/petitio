@@ -9,4 +9,3 @@ export function petitio(url: URL | string, method: HTTPMethod = "GET") {
 	return new PetitioRequest(url, method);
 }
 export default petitio;
-if (module) module.exports = petitio;
