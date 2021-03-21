@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+import { URL as NURL } from "url";
 import { PetitioRequest } from "../src/lib/PetitioRequest";
 import { PetitioResponse } from "../src/lib/PetitioResponse";
-// eslint-disable-next-line sort-imports
-import { URL as NURL } from "url";
 
-// eslint-disable-next-line max-lines-per-function
 describe("PetitioResponse", () => {
 	describe("JSON", () => {
 		test("GET JSON data FROM https://jsonplaceholder.typicode.com/posts/1 STRING", async () => {

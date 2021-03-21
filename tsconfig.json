@@ -1,16 +1,16 @@
 {
-  "compilerOptions": {
-    "target": "ES2015",
-    "module": "commonjs",
-    "declaration": true,
-    "outDir": "dist",
-    "resolveJsonModule": true,
-    "strict": false,
-    "strictPropertyInitialization": false,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "lib": ["es2019"]
-  }
+	"compilerOptions": {
+		"target": "ES2015",
+		"module": "commonjs",
+		"declaration": true,
+		"outDir": "dist",
+		"resolveJsonModule": true,
+		"strict": false,
+		"strictPropertyInitialization": false,
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"lib": ["es2019"]
+	}
 }

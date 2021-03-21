@@ -1,11 +1,8 @@
-// eslint-disable-next-line
 import { Client } from "undici";
-/* eslint-disable @typescript-eslint/naming-convention */
+import { URL as NURL } from "url";
 import { PetitioRequest } from "../src/lib/PetitioRequest";
 import qs from "querystring";
-// eslint-disable-next-line sort-imports
-import { URL as NURL } from "url";
-// eslint-disable-next-line
+
 describe("PetitioRequest", () => {
 	describe("Query Params", () => {
 		const QS = [
@@ -224,10 +221,26 @@ describe("PetitioRequest", () => {
 		test("CHECK THAT passed url DIDNT MATCH ALLOWED protocols", () => {
 			const URL = new NURL("https://helper.wtf");
 
-			// eslint-disable-next-line func-style
 			const request = new PetitioRequest(URL);
-
 			expect(request.url instanceof NURL).toBeTruthy();
+		});
+	});
+
+	describe("SEND", () => {
+		test("IF existing client THEN use existing", async () => {
+			const client = new Client("https://helper.wtf");
+			const spy = jest.spyOn(client, "dispatch");
+			const URL = new NURL("https://helper.wtf");
+			const request = await new PetitioRequest(URL)
+				.client(client)
+				.send();
+			expect(spy).toHaveBeenCalledTimes(1);
+		});
+		test("IF invalid THEN rejects", () => {
+			expect.assertions(1);
+			const URL = new NURL("https://nothing.nowhere");
+
+			return expect(new PetitioRequest(URL).send()).rejects.toThrow();
 		});
 	});
 });
