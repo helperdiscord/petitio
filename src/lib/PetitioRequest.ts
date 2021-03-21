@@ -12,7 +12,6 @@ export function parseHeaders(headers: string[], res: PetitioResponse): any {
 	for (let idx = 1; idx < headers.length; idx += 2) {
 		const key = headers[idx - 1].toLowerCase();
 		let val = res.headers[key.toString()];
-		/* istanbul ignore else */
 		if (!val) res.headers[key] = headers[idx];
 		else {
 			if (!Array.isArray(val)) {
