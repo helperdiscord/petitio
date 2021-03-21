@@ -2,7 +2,7 @@
 export class PetitioResponse {
 	public body: Buffer = Buffer.alloc(0);
 	public headers: { [k: string]: any } = {};
-	public statusCode: number;
+	public statusCode: number | null = null;
 
 	/**
 	 * @param {*} chunk

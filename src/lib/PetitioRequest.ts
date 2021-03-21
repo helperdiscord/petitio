@@ -1,3 +1,4 @@
+// @ts-expect-error 7016 - Unusual type exports
 import Client from "undici/lib/core/client";
 import type ClientType from "undici/types/client";
 import type { IncomingHttpHeaders } from "http";
@@ -7,14 +8,18 @@ import { join } from "path";
 import { stringify } from "querystring";
 
 export type HTTPMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
-
+export interface TimeoutOptions {
+	bodyTimeout?: number;
+	headersTimeout?: number;
+	keepAliveTimeout?: number
+}
 
 export class PetitioRequest {
 	public url: URL;
 	public data: string | Buffer | null = null;
 	public reqHeaders: IncomingHttpHeaders = {};
 	public coreOptions: ClientType.Options = {};
-	public timeoutOptions: { bodyTimeout?: number, headersTimeout?: number, keepAliveTimeout?: number } = {};
+	public timeoutOptions: TimeoutOptions = {};
 	public kClient?: Client;
 	public keepClient?: boolean;
 
@@ -85,7 +90,7 @@ export class PetitioRequest {
 			this.reqHeaders["content-type"] = "application/x-www-form-urlencoded";
 			this.data = stringify(data);
 		}
-		this.reqHeaders["content-length"] = Buffer.byteLength(this.data).toString();
+		this.reqHeaders["content-length"] = Buffer.byteLength(this.data as string | Buffer).toString();
 
 		return this;
 	}
@@ -123,7 +128,9 @@ export class PetitioRequest {
 	 * @return {*}  {this}
 	 * @memberof PetitioRequest
 	 */
-	public timeout(timeout: number | string, time?: number): this {
+	public timeout(timeout: keyof TimeoutOptions, time: number): this
+	public timeout(timeout: number): this
+	public timeout(timeout: keyof TimeoutOptions | number, time?: number): this {
 		if (typeof timeout === "string") this.timeoutOptions[timeout] = time;
 		else this.timeoutOptions.bodyTimeout = timeout;
 
