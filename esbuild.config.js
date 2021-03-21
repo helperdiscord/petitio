@@ -1,4 +1,4 @@
-// eslint-disable-next-line
+// eslint-disable-next-line 
 const esbuild = require("esbuild");
 
 esbuild.build({
