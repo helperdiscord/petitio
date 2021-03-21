@@ -15,15 +15,28 @@ describe("parseHeaders", () => {
 		});
 
 		test("IF overlapping headers THEN concatenate", () => {
-			const headersArray2 = ["a", "1", "b", "2", "c", "3", "a", "4"];
-			const parsedHeaders2 = {"a": ["1", "4"], "b": "2", "c": "3"};
+			const headersArray = ["a", "1", "b", "2", "c", "3", "a", "4"];
+			const parsedHeaders = {"a": ["1", "4"], "b": "2", "c": "3"};
 
 			expect.assertions(1);
 
 			const res = new PetitioResponse();
-			res._parseHeaders(headersArray2);
+			res._parseHeaders(headersArray);
 
-			expect(res.headers).toEqual(parsedHeaders2);
+			expect(res.headers).toEqual(parsedHeaders);
+		});
+
+		test("IF headers exist THEN array / append", () => {
+			const headersArray = ["b", "2", "c", "3", "a", "4"];
+			const parsedHeaders = {"a": ["1", "4"], "b": "2", "c": "3"};
+
+			expect.assertions(1);
+
+			const res = new PetitioResponse();
+			res.headers = {"a": "1"};
+			res._parseHeaders(headersArray);
+
+			expect(res.headers).toEqual(parsedHeaders);
 		});
 	});
 });
