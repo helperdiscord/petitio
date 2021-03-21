@@ -29,11 +29,16 @@ jobs:
         run: npm ci
       - name: "[EXEC] Release"
         run: |
-          npm config set //registry.npmjs.org/:_authToken $TOKEN
-          npm run build
-          npm publish
+          npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+          git config --global user.name 'Kludge Cyber Systems (CI)'
+          git config --global user.email contact@kludge-cs.co.uk
+          npx semantic-release
         env:
-          TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "[POST] Clean up failed release"
+        if: failure()
+        run: git reset HEAD^ && git push --force
   build:
     name: Build
     needs: release
@@ -60,14 +65,14 @@ jobs:
         if: ${{ !steps.cache-restore.outputs.cache-hit }}
         run: npm ci
       - name: "[EXEC] Build"
-        run: npm run package
+        run: npm run build
       - name: "[EXEC] Update build branch"
         run: |
           git config --global user.name 'Kludge Cyber Systems (CI)'
           git config --global user.email contact@kludge-cs.co.uk
           mkdir $GITHUB_WORKSPACE/../transfer
           PACKAGE_VERSION=$(node -pe "require('./package.json').version")
-          files="LICENSE README.md CHANGELOG.md package*.json action.yml dist"
+          files="LICENSE README.md CHANGELOG.md package*.json dist"
           for file in $files; do cp -r $file $GITHUB_WORKSPACE/../transfer || true; done
           if [[ $(git checkout build) ]]; then
             echo -e "# Using existing build"
@@ -82,7 +87,6 @@ jobs:
           rm -rf dist && cp -r $GITHUB_WORKSPACE/../transfer/* ./
           git add .
           git commit -m "build: v${PACKAGE_VERSION}" || true
-          git tag -f "v${PACKAGE_VERSION}"
-          git push --tags --set-upstream origin build
+          git push --set-upstream origin build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
