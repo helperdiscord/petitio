@@ -1,0 +1,87 @@
+name: "CI: Lint & Test"
+on: [push, pull_request]
+jobs:
+  eslint:
+    name: Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      matrix:
+        node: [14]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+      - name: "[INIT] Install Node.js ${{ matrix.node }}"
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: "[INIT] Restore dependency cache"
+        id: cache-restore
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install dependencies"
+        if: ${{ !steps.cache-restore.outputs.cache-hit }}
+        run: npm ci
+      - name: "[EXEC] Lint"
+        run: npm run lint
+      - name: "[EXEC] Push lint fixes"
+        run: |
+          git config user.name 'Kludge Cyber Systems (CI)'
+          git config user.email contact@kludge-cs.co.uk
+          git add .
+          if git commit --no-verify -m 'style: apply lint'; then
+            if [[ '${{ github.head_ref }}' ]]; then
+              git push origin HEAD:${{ github.head_ref }}
+            else
+              git push
+            fi
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  test-cover:
+    name: Test & Upload Coverage
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      matrix:
+        node: [12, 14, 15]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+      - name: "[INIT] Install Node.js ${{ matrix.node }}"
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: "[INIT] Restore dependency cache"
+        id: cache-restore
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install dependencies"
+        if: ${{ !steps.cache-restore.outputs.cache-hit }}
+        run: npm ci
+      - name: "[EXEC] Test"
+        run: npm run test:coverage
+      - name: "[EXEC] Upload coverage to Coveralls"
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-node${{ matrix.node }}
+          parallel: true
+  cover:
+    name: Finalize Coverage Report
+    needs: test-cover
+    runs-on: ubuntu-latest
+    steps:
+      - name: "[POST] Finalize Coveralls collection"
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
