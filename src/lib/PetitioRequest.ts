@@ -42,12 +42,14 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {(string | object)} key
-	 * @param {*} value
+	 *
+	 *
+	 * @param {(string | Record<string, any>)} key
+	 * @param {*} [value]
 	 * @return {*}  {this}
 	 * @memberof PetitioRequest
 	 */
-	public query(key: string | Record<string, any>, value: any): this {
+	public query(key: string | Record<string, any>, value?: any): this {
 		if (typeof key === "object") Object.keys(key).forEach((query) => {
 			this.url.searchParams.append(query, key[query]);
 		});
@@ -68,8 +70,10 @@ export class PetitioRequest {
 	}
 
 	/**
+	 *
+	 *
 	 * @param {*} data
-	 * @param {('json' | 'buffer' | 'form')} [sendAs]
+	 * @param {("json" | "form")} [sendAs]
 	 * @return {*}  {this}
 	 * @memberof PetitioRequest
 	 */
@@ -88,6 +92,8 @@ export class PetitioRequest {
 	}
 
 	/**
+	 *
+	 *
 	 * @param {(string | { [k: string]: string })} header
 	 * @param {string} [value]
 	 * @return {*}  {this}

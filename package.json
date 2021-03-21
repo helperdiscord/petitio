@@ -17,14 +17,25 @@
 		"build:main": "esbuild src/*.ts --bundle --minify --platform=node --outdir=dist --tsconfig=tsconfig.json",
 		"build:types": "tsc --emitDeclarationOnly --outDir dist",
 		"prepack": "npm build",
-		"docs": "typedoc src/index.ts"
+		"docs": "typedoc src/index.ts",
+		"test": "jest",
+		"test:coverage": "jest --coverage",
+		"lint": "eslint src tests --ext ts --fix"
 	},
 	"author": "Vetlix <vetlixk@gmail.com> doge <doge@helper.wtf> Nytelife26 <nytelife@protonmail.com> (https://github.com/Nytelife26)",
 	"license": "MIT",
 	"devDependencies": {
+		"@jest/types": "^26.6.2",
+		"@kludge-cs/eslint-config-ts": "^1.0.8",
+		"@types/jest": "^26.0.21",
 		"@types/node": "^14.14.35",
 		"esbuild": "^0.9.3",
+		"eslint": "^7.22.0",
+		"jest": "^26.6.3",
+		"jest-circus": "^26.6.3",
 		"npm-run-all": "^4.1.5",
+		"ts-jest": "^26.5.4",
+		"ts-node": "^9.1.1",
 		"typedoc": "^0.20.20",
 		"typescript": "^4.2.3",
 		"undici": "^3.3.3"

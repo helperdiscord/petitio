@@ -1,0 +1,56 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+import { PetitioRequest } from "../src/lib/PetitioRequest";
+import { PetitioResponse } from "../src/lib/PetitioResponse";
+// eslint-disable-next-line sort-imports
+import { URL as NURL } from "url";
+
+describe("PetitioResponse", () => {
+	describe("JSON", () => {
+		test("GET JSON data FROM https://jsonplaceholder.typicode.com/posts/1 STRING", async () => {
+			expect.assertions(1);
+			const URL = "https://jsonplaceholder.typicode.com/posts/1";
+			const RESPONSE = {
+				userId: 1,
+				id: 1,
+				title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+				// eslint-disable-next-line max-len
+				body: "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+			};
+
+			const request = new PetitioRequest(URL);
+			const response = await request.json();
+
+			expect(response).toEqual(RESPONSE);
+		});
+
+		test("GET JSON data FROM https://jsonplaceholder.typicode.com/posts/1 URL", async () => {
+			expect.assertions(1);
+			const URL = new NURL("https://jsonplaceholder.typicode.com/posts/1");
+			const RESPONSE = {
+				userId: 1,
+				id: 1,
+				title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+				// eslint-disable-next-line max-len
+				body: "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+			};
+
+			const request = new PetitioRequest(URL);
+			const response = await request.json();
+
+			expect(response).toEqual(RESPONSE);
+		});
+	});
+	describe("Building Response", () => {
+		const data = { hi: "hello" };
+		const buffer = Buffer.from(JSON.stringify(data));
+
+		test("ADDING BUFFER TO RESPONSE", () => {
+			const res = new PetitioResponse();
+			res._addChunk(buffer);
+
+			const final = res.json();
+
+			expect(final).toEqual(data);
+		});
+	});
+});

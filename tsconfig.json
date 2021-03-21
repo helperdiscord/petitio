@@ -4,13 +4,13 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "dist",
-    "rootDir": "src",
     "resolveJsonModule": true,
     "strict": false,
     "strictPropertyInitialization": false,
-     "moduleResolution": "node",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "lib": ["es2019"]
   }
 }
