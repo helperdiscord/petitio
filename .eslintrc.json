@@ -1,7 +1,8 @@
 {
 	"extends": "@kludge-cs/eslint-config-ts",
 	"parserOptions": {
-		"project": "./tsconfig.eslint.json"
+		"project": "./tsconfig.eslint.json",
+		"ecmaVersion": 2015
  	},
 	"rules": {
 		"lines-between-class-members": 0,
