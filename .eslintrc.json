@@ -1,0 +1,14 @@
+{
+	"extends": "@kludge-cs/eslint-config-ts",
+	"parserOptions": {
+		"project": "./tsconfig.eslint.json"
+ 	},
+	"rules": {
+		"lines-between-class-members": 0,
+		"valid-jsdoc": 0,
+		"max-len": [2, {"tabWidth": 4, "code": 120}],
+		"@typescript-eslint/init-declarations": 0,
+		"no-underscore-dangle": 0,
+		"no-extra-parens": 0
+	}
+}
