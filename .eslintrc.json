@@ -11,5 +11,13 @@
 		"@typescript-eslint/init-declarations": 0,
 		"no-underscore-dangle": 0,
 		"no-extra-parens": 0
-	}
+	},
+	"overrides": [
+		{
+			"files": ["tests/**/*.ts"],
+			"rules": {
+				"max-lines-per-function": 0
+			}
+		}
+	]
 }
