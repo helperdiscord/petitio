@@ -4,6 +4,7 @@ import { PetitioResponse } from "../src/lib/PetitioResponse";
 // eslint-disable-next-line sort-imports
 import { URL as NURL } from "url";
 
+// eslint-disable-next-line max-lines-per-function
 describe("PetitioResponse", () => {
 	describe("JSON", () => {
 		test("GET JSON data FROM https://jsonplaceholder.typicode.com/posts/1 STRING", async () => {
@@ -51,6 +52,18 @@ describe("PetitioResponse", () => {
 			const final = res.json();
 
 			expect(final).toEqual(data);
+		});
+	});
+	describe("TEXT", () => {
+		const text = "hi";
+		const buffer = Buffer.from(text);
+		test("TEXT", () => {
+			const res = new PetitioResponse();
+			res._addChunk(buffer);
+
+			const final = res.text();
+
+			expect(final).toEqual(text);
 		});
 	});
 });
