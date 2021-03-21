@@ -8,6 +8,22 @@ import { stringify } from "querystring";
 
 export type HTTPMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 
+export function parseHeaders(headers: string[], res: PetitioResponse): any {
+	for (let idx = 1; idx < headers.length; idx += 2) {
+		const key = headers[idx - 1].toLowerCase();
+		let val = res.headers[key.toString()];
+		/* istanbul ignore else */
+		if (!val) res.headers[key] = headers[idx];
+		else {
+			if (!Array.isArray(val)) {
+				val = [val];
+				res.headers[key] = val;
+			}
+			val.push(headers[idx]);
+		}
+	}
+}
+
 export class PetitioRequest {
 	public url: URL;
 	public data: string | Buffer | null = null;
@@ -203,18 +219,7 @@ export class PetitioRequest {
 				onConnect: () => null,
 				onHeaders: (statusCode: number, headers: string[], resume: () => void) => {
 					res.statusCode = statusCode;
-					for (let idx = 1; idx < headers.length; idx += 2) {
-						const key = headers[idx - 1].toLowerCase();
-						let val = res.headers[key.toString()];
-						if (!val) res.headers[key] = headers[idx];
-						else {
-							if (!Array.isArray(val)) {
-								val = [val];
-								res.headers[key] = val;
-							}
-							val.push(headers[idx]);
-						}
-					}
+					parseHeaders(headers, res);
 					resume();
 				}
 			});
