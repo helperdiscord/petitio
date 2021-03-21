@@ -1,0 +1,19 @@
+name: "CI: CodeQL Analysis"
+on: [push, pull_request]
+jobs:
+  analyze:
+    name: Analyze JavaScript
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+      - name: "[INIT] Set up CodeQL"
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+      - name: "[EXEC] Perform analysis"
+        uses: github/codeql-action/analyze@v1

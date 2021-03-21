@@ -1,0 +1,88 @@
+name: "CD: Release"
+on:
+  push:
+    branches:
+      - master
+jobs:
+  release:
+    name: Release
+    if: "(contains(github.event.head_commit.message, '[ci_release]'))"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+      - name: "[INIT] Setup Node.js ${{ matrix.node }}"
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: "[INIT] Restore dependency cache"
+        id: cache-restore
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install dependencies"
+        if: ${{ !steps.cache-restore.outputs.cache-hit }}
+        run: npm ci
+      - name: "[EXEC] Release"
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $TOKEN
+          npm run build
+          npm publish
+        env:
+          TOKEN: ${{ secrets.NPM_TOKEN }}
+  build:
+    name: Build
+    needs: release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "[INIT] Setup Node.js ${{ matrix.node }}"
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: "[INIT] Restore dependency cache"
+        id: cache-restore
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install dependencies"
+        if: ${{ !steps.cache-restore.outputs.cache-hit }}
+        run: npm ci
+      - name: "[EXEC] Build"
+        run: npm run package
+      - name: "[EXEC] Update build branch"
+        run: |
+          git config --global user.name 'Kludge Cyber Systems (CI)'
+          git config --global user.email contact@kludge-cs.co.uk
+          mkdir $GITHUB_WORKSPACE/../transfer
+          PACKAGE_VERSION=$(node -pe "require('./package.json').version")
+          files="LICENSE README.md CHANGELOG.md package*.json action.yml dist"
+          for file in $files; do cp -r $file $GITHUB_WORKSPACE/../transfer || true; done
+          if [[ $(git checkout build) ]]; then
+            echo -e "# Using existing build"
+            git restore --staged . || true
+          else
+            echo -e "# Creating orphan build"
+            git checkout --orphan build
+            git rm --cached -r .
+            git commit --allow-empty -m 'chore: initial commit' || true
+          fi
+          git clean -fdx && git reset --hard HEAD
+          rm -rf dist && cp -r $GITHUB_WORKSPACE/../transfer/* ./
+          git add .
+          git commit -m "build: v${PACKAGE_VERSION}" || true
+          git tag -f "v${PACKAGE_VERSION}"
+          git push --tags --set-upstream origin build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
