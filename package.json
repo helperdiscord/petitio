@@ -1,0 +1,62 @@
+{
+	"name": "petitio",
+	"version": "2.0.0",
+	"description": "Zero-dependency HTTP library designed to be simple, fast, and type-strong.",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"!dist/*.tsbuildinfo"
+	],
+	"exports": {
+		"require": "./dist/index.js",
+		"import": "./dist/index.mjs"
+	},
+	"scripts": {
+		"prepare": "husky install",
+		"prepack": "npm run build",
+		"build": "run-p build:*",
+		"build:main": "node esbuild.config.js",
+		"build:types": "tsc -b src",
+		"postbuild": "gen-esm-wrapper dist/index.js dist/index.mjs",
+		"docs": "typedoc src/**/*.ts --entryPoints src/index.ts ./tsconfig.json",
+		"test": "jest",
+		"test:coverage": "jest --coverage",
+		"lint": "eslint src tests --ext ts --fix"
+	},
+	"author": "Vetlix <vetlixk@gmail.com> doge <doge@helper.wtf> Nytelife26 <nytelife@protonmail.com> (https://github.com/Nytelife26)",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/helperdiscord/petitio.git"
+	},
+	"devDependencies": {
+		"@jest/types": "^26.6.2",
+		"@kludge-cs/eslint-config-ts": "^1.0.8",
+		"@semantic-release/changelog": "^5.0.1",
+		"@semantic-release/commit-analyzer": "^8.0.1",
+		"@semantic-release/git": "^9.0.0",
+		"@semantic-release/github": "^7.2.0",
+		"@semantic-release/npm": "^7.0.10",
+		"@semantic-release/release-notes-generator": "^9.0.2",
+		"@types/jest": "^26.0.21",
+		"@types/node": "^14.14.35",
+		"@typescript-eslint/eslint-plugin": "^4.18.0",
+		"@typescript-eslint/parser": "^4.18.0",
+		"esbuild": "^0.9.3",
+		"eslint": "^7.22.0",
+		"eslint-plugin-json": "^2.1.2",
+		"gen-esm-wrapper": "^1.1.1",
+		"husky": "^5.1.3",
+		"jest": "^26.6.3",
+		"jest-circus": "^26.6.3",
+		"lint-staged": "^10.5.4",
+		"npm-run-all": "^4.1.5",
+		"semantic-release": "^17.4.2",
+		"ts-jest": "^26.5.4",
+		"ts-node": "^9.1.1",
+		"typedoc": "^0.20.20",
+		"typescript": "^4.2.3",
+		"undici": "^3.3.3"
+	}
+}
