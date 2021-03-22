@@ -6,11 +6,11 @@
  	},
 	"rules": {
 		"lines-between-class-members": 0,
-		"valid-jsdoc": 0,
-		"max-len": [2, {"tabWidth": 4, "code": 120}],
+		"max-len": [2, {"tabWidth": 4, "code": 120, "ignoreComments": true}],
 		"@typescript-eslint/init-declarations": 0,
 		"no-underscore-dangle": 0,
-		"no-extra-parens": 0
+		"no-extra-parens": 0,
+		"lines-around-comment": 0
 	},
 	"overrides": [
 		{
