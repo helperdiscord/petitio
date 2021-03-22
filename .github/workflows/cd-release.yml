@@ -32,12 +32,14 @@ jobs:
       - name: "[EXEC] Release"
         run: |
           npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
-          git config --global user.name 'Kludge Cyber Systems (CI)'
-          git config --global user.email contact@kludge-cs.co.uk
           npx semantic-release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: Kludge Cyber Systems (CI)
+          GIT_AUTHOR_EMAIL: contact@kludge-cs.co.uk
+          GIT_COMMITTER_NAME: Kludge Cyber Systems (CI)
+          GIT_COMMITTER_EMAIL: contact@kludge-cs.co.uk
       - name: "[POST] Clean up failed release"
         if: failure()
         run: git reset HEAD^ && git push --force
