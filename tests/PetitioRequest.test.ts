@@ -1,6 +1,7 @@
 import { Client } from "undici";
 import { URL as NURL } from "url";
 import { PetitioRequest } from "../src/lib/PetitioRequest";
+import { Readable } from "stream";
 import qs from "querystring";
 
 describe("PetitioRequest", () => {
@@ -41,10 +42,13 @@ describe("PetitioRequest", () => {
 
 	describe("Body", () => {
 		const body = { hi: "hello" };
+		const text = "hi";
 
 		const bodyString = JSON.stringify(body);
 		const bodyString2 = qs.stringify(body);
 		const bodyBuffer = Buffer.from(bodyString);
+
+		const bodyStream = Readable.from(text, { objectMode: false });
 
 		test("CHECK THAT passed body MATCH RECIEVED stringified body", () => {
 			expect.assertions(1);
@@ -56,6 +60,29 @@ describe("PetitioRequest", () => {
 				.body(body);
 
 			expect(response.data).toEqual(bodyString);
+		});
+
+		test("CHECK THAT passed body MATCH RECIEVED stringified body", () => {
+			expect.assertions(1);
+
+			const URL = "https://postman-echo.com/get";
+
+			const request = new PetitioRequest(URL);
+			const response = request
+				.body(body, "json");
+
+			expect(response.data).toEqual(bodyString);
+		});
+
+		test("CHECK THAT passed stream MATCH RECIEVED passed body", () => {
+			expect.assertions(1);
+
+			const URL = "https://postman-echo.com/get";
+
+			const request = new PetitioRequest(URL)
+				.body(bodyStream, "stream");
+
+			expect(request.data).toEqual(bodyStream);
 		});
 
 		test("CHECK THAT passed form MATCH RECIEVED form body", () => {
@@ -163,9 +190,17 @@ describe("PetitioRequest", () => {
 	describe("OPTION", () => {
 		const key = "pipelining";
 		const val = 10;
-		test("CHECK THAT post MATCHED SENT post", () => {
+		const options = { "pipelining": val };
+		test("CHECK THAT key/val MATCHED SENT key/val", () => {
 			const req = new PetitioRequest("https://helper.wtf")
 				.option(key, val);
+
+			expect(req.coreOptions[key]).toEqual(val);
+		});
+
+		test("CHECK THAT k/v object MATCHED SENT k/v object", () => {
+			const req = new PetitioRequest("https://helper.wtf")
+				.option(options);
 
 			expect(req.coreOptions[key]).toEqual(val);
 		});

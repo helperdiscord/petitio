@@ -8,10 +8,10 @@ import type ClientType from "undici/types/client";
 import type { IncomingHttpHeaders } from "http";
 import type { ParsedUrlQueryInput } from "querystring";
 import { PetitioResponse } from "./PetitioResponse";
+import Stream from "stream";
 import { URL } from "url";
 import { join } from "path";
 import { stringify } from "querystring"; // eslint-disable-line no-duplicate-imports
-
 /**
  * Accepted HTTP methods (currently only supports up to HTTP/1.1).
  */
@@ -34,7 +34,7 @@ export class PetitioRequest {
 	/**
 	 * The data to be sent as the request body.
 	 */
-	public data?: string | Buffer;
+	public data?: Buffer | string | Stream.Readable;
 	/**
 	 * @see [[HTTPMethod]]
 	 */
@@ -142,16 +142,49 @@ export class PetitioRequest {
 	 * set to the URL encoded version of the query string.
 	 */
 	public body(data: ParsedUrlQueryInput | string, sendAs: "form"): this
-	public body(data: any, sendAs?: "json" | "form"): this {
-		if (sendAs === "json" || (typeof data === "object" && !Buffer.isBuffer(data))) {
-			this.reqHeaders["content-type"] = "application/json";
-			this.data = JSON.stringify(data);
-		} else if (sendAs === "form") {
-			this.reqHeaders["content-type"] = "application/x-www-form-urlencoded";
-			this.data = stringify(data);
-		} else this.data = data;
-		this.reqHeaders["content-length"] = Buffer.byteLength(this.data as string | Buffer).toString();
-
+	/**
+	 * @param {*} data The data to be set for the request body.
+	 * @param {*} sendAs If data is a stream *AND* this is set to `stream`,
+	 * the body will be sent as is with no modifications such as stringification
+	 * or otherwise.
+	 */
+	public body(data: Stream.Readable, sendAs: "stream"): this
+	public body(data: any, sendAs?: "json" | "form" | "stream"): this {
+		switch (sendAs) {
+			case "json": {
+				this.data = JSON.stringify(data);
+				this.header({
+					"content-type": "application/json",
+					"content-length": Buffer.byteLength(this.data as string | Buffer).toString()
+				});
+				break;
+			}
+			case "form": {
+				this.data = stringify(data);
+				this.header({
+					"content-type": "application/x-www-form-urlencoded",
+					"content-length": Buffer.byteLength(this.data as string | Buffer).toString()
+				});
+				break;
+			}
+			case "stream": {
+				this.data = data;
+				break;
+			}
+			default: {
+				if (typeof data === "object" && !Buffer.isBuffer(data)) {
+					this.data = JSON.stringify(data);
+					this.header({
+						"content-type": "application/json",
+						"content-length": Buffer.byteLength(this.data as string).toString()
+					});
+				} else {
+					this.data = data;
+					this.header("content-length", Buffer.byteLength(this.data as string | Buffer).toString());
+				}
+				break;
+			}
+		}
 		return this;
 	}
 
@@ -215,7 +248,7 @@ export class PetitioRequest {
 	 */
 	public option<T extends keyof ClientType.Options>(key: T, value: ClientType.Options[T]): this
 	public option(key: keyof ClientType.Options | ClientType.Options, value?: any) {
-		if (typeof key === "object") this.coreOptions = {...this.coreOptions, ...key};
+		if (typeof key === "object") this.coreOptions = { ...this.coreOptions, ...key };
 		else this.coreOptions[key] = value;
 
 		return this;
@@ -253,7 +286,7 @@ export class PetitioRequest {
 	 */
 	public send(): Promise<PetitioResponse> {
 		return new Promise((resolve, reject) => {
-			const options: Client.RequestOptions = {
+			const options: ClientType.RequestOptions = {
 				path: this.url.pathname + this.url.search,
 				method: this.httpMethod,
 				headers: this.reqHeaders,
