@@ -8,7 +8,7 @@ import type ClientType from "undici/types/client";
 import type { IncomingHttpHeaders } from "http";
 import type { ParsedUrlQueryInput } from "querystring";
 import { PetitioResponse } from "./PetitioResponse";
-import Stream from "stream";
+import type { Readable } from "stream";
 import { URL } from "url";
 import { join } from "path";
 import { stringify } from "querystring"; // eslint-disable-line no-duplicate-imports
@@ -34,7 +34,7 @@ export class PetitioRequest {
 	/**
 	 * The data to be sent as the request body.
 	 */
-	public data?: Buffer | string | Stream.Readable;
+	public data?: Buffer | string | Readable;
 	/**
 	 * @see [[HTTPMethod]]
 	 */
@@ -148,7 +148,7 @@ export class PetitioRequest {
 	 * the body will be sent as is with no modifications such as stringification
 	 * or otherwise.
 	 */
-	public body(data: Stream.Readable, sendAs: "stream"): this
+	public body(data: Readable, sendAs: "stream"): this
 	public body(data: any, sendAs?: "json" | "form" | "stream"): this {
 		switch (sendAs) {
 			case "json": {
