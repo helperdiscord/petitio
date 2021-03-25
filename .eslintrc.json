@@ -10,7 +10,8 @@
 		"@typescript-eslint/init-declarations": 0,
 		"no-underscore-dangle": 0,
 		"no-extra-parens": 0,
-		"lines-around-comment": 0
+		"lines-around-comment": 0,
+		"valid-jsdoc": 0
 	},
 	"overrides": [
 		{
