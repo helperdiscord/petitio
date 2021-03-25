@@ -63,4 +63,18 @@ describe("PetitioResponse", () => {
 			expect(final).toEqual(text);
 		});
 	});
+
+	describe("TEXT WITH ENCODING", () => {
+		const text = "hi";
+		const buffer = Buffer.from(text);
+		const encoded = buffer.toString("base64");
+		test("BASE64", () => {
+			const res = new PetitioResponse();
+			res._addChunk(buffer);
+
+			const final = res.text("base64");
+
+			expect(final).toEqual(encoded);
+		});
+	});
 });
