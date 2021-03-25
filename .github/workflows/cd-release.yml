@@ -72,6 +72,7 @@ jobs:
         run: npm run build
       - name: "[EXEC] Update build branch"
         run: |
+          git pull || true
           git config --global user.name 'Kludge Cyber Systems (CI)'
           git config --global user.email contact@kludge-cs.co.uk
           mkdir $GITHUB_WORKSPACE/../transfer
@@ -94,3 +95,50 @@ jobs:
           git push --set-upstream origin build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  document:
+    name: Document
+    needs: release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "[INIT] Setup Node.js ${{ matrix.node }}"
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: "[INIT] Restore dependency cache"
+        id: cache-restore
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install dependencies"
+        if: ${{ !steps.cache-restore.outputs.cache-hit }}
+        run: npm ci
+      - name: "[EXEC] Build documentation"
+        run: npm run docs
+      - name: "[EXEC] Publish"
+        run: |
+          git pull || true
+          git config --global user.name 'Kludge Cyber Systems (CI)'
+          git config --global user.email contact@kludge-cs.co.uk
+          mkdir $GITHUB_WORKSPACE/../transfer
+          cp -r docs $GITHUB_WORKSPACE/../transfer
+          if [[ $(git checkout gh-pages) ]]; then
+            echo -e "# Using existing docs branch"
+            git restore --staged . || true
+          else
+            echo -e "# Creating orphan docs branch"
+            git checkout --orphan gh-pages
+            git rm --cached -r .
+            git commit --allow-empty -m 'chore: initial commit' || true
+          fi
+          git clean -fdx && git reset --hard HEAD
+          cp -r $GITHUB_WORKSPACE/../transfer/docs/* .
+          git commit -m "build: v${PACKAGE_VERSION} docs" || true
+          git push --set-upstream origin gh-pages
