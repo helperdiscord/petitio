@@ -12,6 +12,7 @@ import type { Readable } from "stream";
 import { URL } from "url";
 import { join } from "path";
 import { stringify } from "querystring"; // eslint-disable-line no-duplicate-imports
+
 /**
  * Accepted HTTP methods (currently only supports up to HTTP/1.1).
  */
@@ -33,6 +34,8 @@ export class PetitioRequest {
 	public coreOptions: ClientType.Options = {};
 	/**
 	 * The data to be sent as the request body.
+	 * This will be a buffer or string for normal requests, or a stream.Readable
+	 * if the request is to be sent as a stream.
 	 */
 	public data?: Buffer | string | Readable;
 	/**
@@ -144,9 +147,9 @@ export class PetitioRequest {
 	public body(data: ParsedUrlQueryInput | string, sendAs: "form"): this
 	/**
 	 * @param {*} data The data to be set for the request body.
-	 * @param {*} sendAs If data is a stream *AND* this is set to `stream`,
-	 * the body will be sent as is with no modifications such as stringification
-	 * or otherwise.
+	 * @param {*} sendAs If data is a stream.Readable *AND* this is set to
+	 * `stream`, the body will be sent as the stream with no modifications to
+	 * it or the headers.
 	 */
 	public body(data: Readable, sendAs: "stream"): this
 	public body(data: any, sendAs?: "json" | "form" | "stream"): this {
@@ -155,7 +158,7 @@ export class PetitioRequest {
 				this.data = JSON.stringify(data);
 				this.header({
 					"content-type": "application/json",
-					"content-length": Buffer.byteLength(this.data as string | Buffer).toString()
+					"content-length": Buffer.byteLength(this.data).toString()
 				});
 				break;
 			}
@@ -163,7 +166,7 @@ export class PetitioRequest {
 				this.data = stringify(data);
 				this.header({
 					"content-type": "application/x-www-form-urlencoded",
-					"content-length": Buffer.byteLength(this.data as string | Buffer).toString()
+					"content-length": Buffer.byteLength(this.data).toString()
 				});
 				break;
 			}
@@ -248,7 +251,7 @@ export class PetitioRequest {
 	 */
 	public option<T extends keyof ClientType.Options>(key: T, value: ClientType.Options[T]): this
 	public option(key: keyof ClientType.Options | ClientType.Options, value?: any) {
-		if (typeof key === "object") this.coreOptions = { ...this.coreOptions, ...key };
+		if (typeof key === "object") this.coreOptions = {...this.coreOptions, ...key};
 		else this.coreOptions[key] = value;
 
 		return this;
