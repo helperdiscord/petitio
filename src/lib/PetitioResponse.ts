@@ -64,7 +64,7 @@ export class PetitioResponse {
 
 	/**
 	 * @param {BufferEncoding} [encoding="utf8"] The encoding to use.
-	 * @return {string} The response body decoded as a UTF-8 (or whatever specified in `encoding`) string from the buffer.
+	 * @return {string} The response body decoded as as a string from the buffer, using either the encoding specified in `encoding` or UTF-8 by default..
 	 * @memberof PetitioResponse
 	 */
 	public text(encoding: BufferEncoding = "utf8"): string {
