@@ -59,7 +59,7 @@ export class PetitioResponse {
 	 * @return {*} A serialized object result parsed from the response body.
 	 */
 	public json<T = any>(): T {
-		return JSON.parse(String.fromCharCode(...this.body.toJSON().data));
+		return JSON.parse(this.body.toString());
 	}
 
 	/**
