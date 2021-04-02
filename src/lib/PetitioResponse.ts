@@ -56,10 +56,11 @@ export class PetitioResponse {
 
 	/**
 	 * @template T Type casting parameter for the JSON result.
-	 * @return {*} A serialized object result parsed from the response body.
+	 * @param {BufferEncoding} [encoding="utf8"] The encoding to use when parsing the response body.
+	 * @return {T} A serialized object result parsed from the response body.
 	 */
-	public json<T = any>(): T {
-		return JSON.parse(String.fromCharCode(...this.body.toJSON().data));
+	public json<T = any>(encoding: BufferEncoding = "utf8"): T {
+		return JSON.parse(this.body.toString(encoding));
 	}
 
 	/**
