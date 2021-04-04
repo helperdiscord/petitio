@@ -105,10 +105,10 @@ export class PetitioRequest {
 	 */
 	public query(key: Record<string, any>): this
 	public query(key: string | Record<string, any>, value?: any): this {
-		if (typeof key === "object") Object.keys(key).forEach((query) => {
-			this.url.searchParams.append(query, key[query]);
-		});
-		else this.url.searchParams.append(key, value);
+		if (typeof key === "object") {
+			const keys = Object.keys(key);
+			for (const query of Object.keys(key)) this.url.searchParams.append(query, key[query]);
+		} else this.url.searchParams.append(key, value);
 
 		return this;
 	}
