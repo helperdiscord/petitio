@@ -105,10 +105,10 @@ export class PetitioRequest {
 	 */
 	public query(key: Record<string, any>): this
 	public query(key: string | Record<string, any>, value?: any): this {
-		if (typeof key === "object") Object.keys(key).forEach((query) => {
-			this.url.searchParams.append(query, key[query]);
-		});
-		else this.url.searchParams.append(key, value);
+		if (typeof key === "object") {
+			const keys = Object.keys(key);
+			for (const query of Object.keys(key)) this.url.searchParams.append(query, key[query]);
+		} else this.url.searchParams.append(key, value);
 
 		return this;
 	}
@@ -201,9 +201,9 @@ export class PetitioRequest {
 	 */
 	public header(header: Record<string, string>): this
 	public header(header: string | Record<string, string>, value?: string): this {
-		if (typeof header === "object") Object.keys(header).forEach((headerName) => {
-			this.reqHeaders[headerName.toLowerCase()] = header[headerName];
-		});
+		// eslint-disable-next-line max-len
+		if (typeof header === "object") for (const hN of Object.keys(header)) this.reqHeaders[hN.toLowerCase()] = header[hN];
+
 		else this.reqHeaders[header.toLowerCase()] = value;
 
 		return this;
