@@ -251,7 +251,7 @@ export class PetitioRequest {
 	 */
 	public option<T extends keyof ClientType.Options>(key: T, value: ClientType.Options[T]): this
 	public option(key: keyof ClientType.Options | ClientType.Options, value?: any) {
-		if (typeof key === "object") this.coreOptions = {...this.coreOptions, ...key};
+		if (typeof key === "object") Object.assign(this.coreOptions, key);
 		else this.coreOptions[key] = value;
 
 		return this;
