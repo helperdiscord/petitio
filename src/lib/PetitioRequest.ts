@@ -199,9 +199,9 @@ export class PetitioRequest {
 	 */
 	public header(header: Record<string, string>): this
 	public header(header: string | Record<string, string>, value?: string): this {
-		if (typeof header === "object") Object.keys(header).forEach((headerName) => {
-			this.reqHeaders[headerName.toLowerCase()] = header[headerName];
-		});
+		// eslint-disable-next-line max-len
+		if (typeof header === "object") for (const hN of Object.keys(header)) this.reqHeaders[hN.toLowerCase()] = header[hN];
+
 		else this.reqHeaders[header.toLowerCase()] = value;
 
 		return this;
