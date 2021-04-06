@@ -80,7 +80,7 @@ module.exports = {
 					]
 				}
 			],
-			copyright: `Copyright © ${new Date().getFullYear()} Helperdiscord. Built with Docusaurus and TypeDoc.`
+			copyright: `Copyright © ${new Date().getFullYear()} helperdiscord. Built with Docusaurus and TypeDoc.`
 		}
 	},
 	presets: [
