@@ -7,6 +7,7 @@ module.exports = {
 	baseUrl: "/",
 	onBrokenLinks: "throw",
 	onBrokenMarkdownLinks: "throw",
+	i18n: {},
 	favicon: "img/favicon.ico",
 	organizationName: "helperdiscord",
 	projectName: "petitio",
@@ -25,7 +26,12 @@ module.exports = {
 		]
 	],
 	themeConfig: {
+		hideableSidebar: true,
+		colorMode: {
+			respectPrefersColorScheme: true
+		},
 		navbar: {
+			hideOnScroll: true,
 			title: "Petitio Docs",
 			logo: {
 				alt: "My Site Logo",
@@ -44,7 +50,21 @@ module.exports = {
 					position: "left"
 				},
 				{
-					href: "https://github.com/facebook/docusaurus",
+					type: "docsVersionDropdown",
+					position: "right",
+					dropdownItemsBefore: [],
+					dropdownItemsAfter: [{to: "/versions", label: "All versions"}],
+					dropdownActiveClassDisabled: true,
+					docsPluginId: "default"
+				},
+				{
+					type: "localeDropdown",
+					position: "right",
+					dropdownItemsBefore: [],
+					dropdownItemsAfter: [{to: "https://github.com/helperdiscord/petitio/issues/14", label: "Help us translate!"}]
+				},
+				{
+					href: "https://github.com/helperdiscord/petitio",
 					label: "GitHub",
 					position: "right"
 				}
