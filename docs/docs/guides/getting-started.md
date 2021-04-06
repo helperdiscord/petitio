@@ -44,4 +44,4 @@ through our [other guides].
 [response-text]: ../pkg/classes/petitioresponse.petitioresponse-1#text
 [request-text]: ../pkg/classes/petitiorequest.petitiorequest-1#text
 [usage examples]: https://github.com/helperdiscord/petitio/tree/master/USAGE.md
-[other guides]: ../index
+[other guides]: ../

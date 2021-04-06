@@ -1,6 +1,6 @@
 ---
-id: "docs-index"
-title: "docs-index"
+id: "index"
+title: "index"
 slug: "/"
 sidebar_label: "Home"
 custom_edit_url: null
