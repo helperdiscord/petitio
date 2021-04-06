@@ -2,6 +2,7 @@
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import React from "react";
+import { string } from "prop-types";
 import styles from "./styles.module.css";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -34,7 +35,11 @@ function Feature({imageUrl, title, description}) {
 		</div>
 	);
 }
-
+Feature.propTypes = {
+	imageUrl: string.isRequired,
+	title: string.isRequired,
+	description: string.isRequired
+};
 export default function Home() {
 	const context = useDocusaurusContext();
 	const {siteConfig = {}} = context;
@@ -49,6 +54,7 @@ export default function Home() {
 					<div className={styles.buttons}>
 						<Link
 							className={clsx(
+								// eslint-disable-next-line max-len
 								"button button--outline button--secondary button--lg",
 								styles.getStarted
 							)}
@@ -62,7 +68,8 @@ export default function Home() {
 				{features?.length && <section className={styles.features}>
 					<div className="container">
 						<div className="row">
-							{features.map((props, idx) => <Feature key={idx} {...props} />)}
+							{ // eslint-disable-next-line max-len
+								features.map((props, idx) => <Feature key={idx} {...props} />)}
 						</div>
 					</div>
 				</section>
