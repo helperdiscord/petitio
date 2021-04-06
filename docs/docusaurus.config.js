@@ -7,7 +7,10 @@ module.exports = {
 	baseUrl: "/",
 	onBrokenLinks: "throw",
 	onBrokenMarkdownLinks: "throw",
-	i18n: {},
+	i18n: {
+		defaultLocale: "en-gb",
+		locales: ["en-gb"]
+	},
 	favicon: "img/favicon.ico",
 	organizationName: "helperdiscord",
 	projectName: "petitio",

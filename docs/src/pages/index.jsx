@@ -3,6 +3,7 @@ import { FeatureList } from "../components/feature";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import React from "react";
+import Translate from "@docusaurus/Translate";
 import clsx from "../lib/clsx";
 import styles from "./index.module.css";
 import useBaseUrl from "@docusaurus/useBaseUrl";
@@ -26,10 +27,15 @@ export default function Home() {
 			<header className={STYLE.BANNER}>
 				<div className="container">
 					<h1 className="hero__title">{siteConfig.title}</h1>
-					<p className="hero__subtitle">{siteConfig.tagline}</p>
+					<p className="hero__subtitle">
+						<Translate>
+							Zero-dependency HTTP library designed to be simple,
+							fast, and type-strong.
+						</Translate>
+					</p>
 					<div className={styles.buttons}>
 						<Link className={STYLE.BUTTON} to={useBaseUrl("docs/")}>
-							Get Started
+							<Translate>Get Started</Translate>
 						</Link>
 					</div>
 				</div>
