@@ -1,9 +1,9 @@
 /* eslint-disable node/no-missing-import */
+import { FeatureList } from "../components/feature";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import React from "react";
 import clsx from "../lib/clsx";
-import { renderFeatures } from "../components/feature";
 import styles from "./index.module.css";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -21,8 +21,6 @@ export default function Home() {
 	const context = useDocusaurusContext();
 	const {siteConfig = {}} = context;
 
-	const featureList = features?.length ? renderFeatures(features) : undefined;
-
 	return (
 		<Layout title={siteConfig.title} description={siteConfig.tagline}>
 			<header className={STYLE.BANNER}>
@@ -37,7 +35,7 @@ export default function Home() {
 				</div>
 			</header>
 			<main>
-				{featureList}
+				<FeatureList features={features ?? []}/>
 			</main>
 		</Layout>
 	);
