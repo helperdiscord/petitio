@@ -8,10 +8,22 @@ export default function Version({ key, label, path, notes }) {
 	return <tr key={key}>
 		<th>{label}</th>
 		<td>
-			<Link to={path}><Translate>Documentation</Translate></Link>
+			<Link to={path}>
+				<Translate
+					id="version.docs"
+					description="Version documentation header">
+					Documentation
+				</Translate>
+			</Link>
 		</td>
 		<td>
-			<a href={notes}><Translate>Release Notes</Translate></a>
+			<a href={notes}>
+				<Translate
+					id="version.notes"
+					description="Version release notes header">
+					Release Notes
+				</Translate>
+			</a>
 		</td>
 	</tr>;
 }

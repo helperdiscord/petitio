@@ -1,0 +1,30 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Guides",
+    "description": "The label for category Guides in sidebar docs"
+  },
+  "sidebar.docs.category.Metrics": {
+    "message": "Metrics",
+    "description": "The label for category Metrics in sidebar docs"
+  },
+  "sidebar.docs.category.API Reference": {
+    "message": "API Reference",
+    "description": "The label for category API Reference in sidebar docs"
+  },
+  "sidebar.docs.category.Modules": {
+    "message": "Modules",
+    "description": "The label for category Modules in sidebar docs"
+  },
+  "sidebar.docs.category.Classes": {
+    "message": "Classes",
+    "description": "The label for category Classes in sidebar docs"
+  },
+  "sidebar.docs.category.Interfaces": {
+    "message": "Interfaces",
+    "description": "The label for category Interfaces in sidebar docs"
+  }
+}

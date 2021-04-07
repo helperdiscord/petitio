@@ -20,8 +20,8 @@ export default function Versions() {
 	let latestTable;
 	if (latest) {
 		latestTable = <VersionTable id="latest"
-			label={<Translate>Latest</Translate>}
-			description={<Translate>
+			label={<Translate id="versions.latest.title">Latest</Translate>}
+			description={<Translate id="versions.latest.description">
 				Here you can find the documentation for the
 				latest released version.
 			</Translate>}>
@@ -35,8 +35,12 @@ export default function Versions() {
 	let currentTable;
 	if (current !== latest) {
 		currentTable = <VersionTable id="next"
-			label={<Translate>Next (Unreleased)</Translate>}
-			description={<Translate>
+			label={
+				<Translate id="versions.next.title">
+					Next (Unreleased)
+				</Translate>
+			}
+			description={<Translate id="versions.next.description">
 				Here you can find the documentation for the unreleased
 				bleeding-edge version.
 			</Translate>}>
@@ -50,8 +54,12 @@ export default function Versions() {
 	let pastTable;
 	if (past.length) {
 		pastTable = <VersionTable id="archive"
-			label={<Translate>Previous versions (unmaintained)</Translate>}
-			description={<Translate>
+			label={
+				<Translate id="versions.past.title">
+					Previous versions (unmaintained)
+				</Translate>
+			}
+			description={<Translate id="versions.past.description">
 				Here you can find the documentation for archived versions.
 			</Translate>}>
 			{past.map((version) => <Version key={version.name} label={version.label} path={version.path} notes={`${repoUrl}/releases/tag/v${version.name}`} />)}
@@ -60,7 +68,11 @@ export default function Versions() {
 	return (
 		<Layout title="Versions" description="All documented site versions">
 			<main className="container margin-vert--lg">
-				<h1><Translate>Petitio documentation versions</Translate></h1>
+				<h1>
+					<Translate id="versions.pageTitle">
+						Petitio documentation versions
+					</Translate>
+				</h1>
 				{latestTable}
 				{currentTable}
 				{pastTable}
