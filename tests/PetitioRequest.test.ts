@@ -48,7 +48,8 @@ describe("PetitioRequest", () => {
 		const bodyString2 = qs.stringify(body);
 		const bodyBuffer = Buffer.from(bodyString);
 
-		const bodyStream = Readable.from(text, { objectMode: false });
+		// eslint-disable-next-line node/no-unsupported-features/node-builtins
+		const bodyStream = Readable.from(text, {objectMode: false});
 
 		test("CHECK THAT passed body MATCH RECIEVED stringified body", () => {
 			expect.assertions(1);

@@ -1,0 +1,18 @@
+/* Infima variables */
+:root {
+  --ifm-color-primary: #cd152a;
+  --ifm-color-primary-dark: #ab1d2e;
+  --ifm-color-primary-darker: #9b1a2a;
+  --ifm-color-primary-darkest: #8d1826;
+  --ifm-color-primary-light: #d1283b;
+  --ifm-color-primary-lighter: #e34457;
+  --ifm-color-primary-lightest: #e65566;
+  --ifm-code-font-size: 95%;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: #542f33;
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
