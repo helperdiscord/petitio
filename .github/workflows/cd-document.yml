@@ -1,0 +1,151 @@
+name: "CD: Document"
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "docs/**"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "docs/**"
+  release:
+    types: [published]
+jobs:
+  test:
+    name: Build Documentation
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "[INIT] Setup Node.js ${{ matrix.node }}"
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: "[INIT] Restore main dependency cache"
+        id: main-cache-restore
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install main dependencies"
+        if: ${{ !steps.main-cache-restore.outputs.cache-hit }}
+        run: npm ci
+      - name: "[INIT] Restore docs dependency cache"
+        id: docs-cache-restore
+        uses: actions/cache@v2
+        with:
+          path: docs/node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install docs dependencies"
+        if: ${{ !steps.docs-cache-restore.outputs.cache-hit }}
+        run: npm ci
+        working-directory: ./docs
+      - name: "[EXEC] Build documentation"
+        run: npm run build
+        working-directory: ./docs
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+      - name: "[INIT] Setup Node.js ${{ matrix.node }}"
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: "[INIT] Restore main dependency cache"
+        id: main-cache-restore
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install main dependencies"
+        if: ${{ !steps.main-cache-restore.outputs.cache-hit }}
+        run: npm ci
+      - name: "[INIT] Restore docs dependency cache"
+        id: docs-cache-restore
+        uses: actions/cache@v2
+        with:
+          path: docs/node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install docs dependencies"
+        if: ${{ !steps.docs-cache-restore.outputs.cache-hit }}
+        run: npm ci
+        working-directory: ./docs
+      - name: "[INIT] Setup ssh-agent"
+        uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
+      - name: "[EXEC] Deploy documentation"
+        run: npm run deploy
+        working-directory: ./docs
+        env:
+          USE_SSH: true
+          GIT_USER: kludge-cs
+  version-deploy:
+    name: Version for Release & Deploy to GitHub Pages
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+      - name: "[INIT] Setup Node.js ${{ matrix.node }}"
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: "[INIT] Restore main dependency cache"
+        id: main-cache-restore
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install main dependencies"
+        if: ${{ !steps.main-cache-restore.outputs.cache-hit }}
+        run: npm ci
+      - name: "[INIT] Restore docs dependency cache"
+        id: docs-cache-restore
+        uses: actions/cache@v2
+        with:
+          path: docs/node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install docs dependencies"
+        if: ${{ !steps.docs-cache-restore.outputs.cache-hit }}
+        run: npm ci
+        working-directory: ./docs
+      - name: "[INIT] Setup ssh-agent"
+        uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
+      - name: "[EXEC] Version & deploy documentation"
+        run: |
+          git config --global user.name 'Kludge Cyber Systems (CI)'
+          git config --global user.email contact@kludge-cs.co.uk
+          PACKAGE_VERSION=$(node -pe "require('../package.json').version")
+          npm run docusaurus docs:version $PACKAGE_VERSION
+          for locale in $(ls i18n); do
+            mkdir -p i18n/$locale/docusaurus-plugin-content-docs/$PACKAGE_VERSION
+            cp -r docs/* i18n/$locale/docusaurus-plugin-content-docs/$PACKAGE_VERSION
+          done
+          git add .
+          git commit -m "docs: add version $PACKAGE_VERSION"
+          git push || true
+          npm run deploy
+        working-directory: ./docs
+        env:
+          USE_SSH: true
+          GIT_USER: kludge-cs

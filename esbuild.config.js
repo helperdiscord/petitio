@@ -1,4 +1,4 @@
-// eslint-disable-next-line 
+// eslint-disable-next-line
 const esbuild = require("esbuild");
 
 esbuild.build({
@@ -9,4 +9,6 @@ esbuild.build({
 	outfile: "./dist/index.js",
 	platform: "node",
 	tsconfig: "tsconfig.json"
-}).catch(() => process.exit(1));
+}).catch((err) => {
+	throw (err);
+});

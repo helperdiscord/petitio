@@ -1,3 +1,12 @@
+---
+id: "index"
+title: "petitio"
+slug: "/pkg"
+sidebar_label: "Readme"
+custom_edit_url: null
+hide_title: true
+---
+
 # petitio
 
 A zero-dependency HTTP library designed to be simple, fast, and type-strong.

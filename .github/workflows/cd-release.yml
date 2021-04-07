@@ -72,12 +72,13 @@ jobs:
         run: npm run build
       - name: "[EXEC] Update build branch"
         run: |
+          git pull || true
           git config --global user.name 'Kludge Cyber Systems (CI)'
           git config --global user.email contact@kludge-cs.co.uk
           mkdir $GITHUB_WORKSPACE/../transfer
           PACKAGE_VERSION=$(node -pe "require('./package.json').version")
-          files="LICENSE README.md CHANGELOG.md package*.json dist"
-          for file in $files; do cp -r $file $GITHUB_WORKSPACE/../transfer || true; done
+          TARBALL=$(npm pack)
+          cp $TARBALL $GITHUB_WORKSPACE/../transfer
           if [[ $(git checkout build) ]]; then
             echo -e "# Using existing build"
             git restore --staged . || true
@@ -88,7 +89,8 @@ jobs:
             git commit --allow-empty -m 'chore: initial commit' || true
           fi
           git clean -fdx && git reset --hard HEAD
-          rm -rf dist && cp -r $GITHUB_WORKSPACE/../transfer/* ./
+          git rm -rf . && cp -r $GITHUB_WORKSPACE/../transfer/$TARBALL ./
+          tar -xf $TARBALL && rm $TARBALL
           git add .
           git commit -m "build: v${PACKAGE_VERSION}" || true
           git push --set-upstream origin build

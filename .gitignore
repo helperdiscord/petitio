@@ -1,6 +1,5 @@
 dist
 node_modules
 coverage
-docs
 .husky/_
 .husky/.gitignore
