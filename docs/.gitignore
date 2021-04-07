@@ -1,5 +1,3 @@
-docs/pkg
-docs/i18n/en-gb/docusaurus-plugin-content-docs/current/pkg
 typedoc-sidebar.js
 .docusaurus
 build
