@@ -9,7 +9,17 @@ import styles from "./index.module.css";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
-const features = [];
+// TODO: add more features, change logo, use remark plugins, add documentation searching
+const features = [
+	{
+		title: <Translate>Warp Speed, Mr. Sulu</Translate>,
+		description: <Translate>
+			Petitio is the fastest mainstream high-level HTTP library available
+			on NPM. Check &quot;performance&quot; on the navigation bar for more
+			details.
+		</Translate>
+	}
+];
 const STYLE = {
 	BANNER: clsx("hero hero--primary", styles.heroBanner),
 	BUTTON: clsx(
