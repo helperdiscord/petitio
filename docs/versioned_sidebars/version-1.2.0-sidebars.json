@@ -1,0 +1,86 @@
+{
+  "version-1.2.0/docs": [
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Guides",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.0/guides/getting-started"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Metrics",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.0/metrics/performance"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "API Reference",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-1.2.0/pkg/index"
+        },
+        {
+          "type": "doc",
+          "id": "version-1.2.0/pkg/modules"
+        },
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "Modules",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-1.2.0/pkg/modules/petitio"
+            },
+            {
+              "type": "doc",
+              "id": "version-1.2.0/pkg/modules/petitiorequest"
+            },
+            {
+              "type": "doc",
+              "id": "version-1.2.0/pkg/modules/petitioresponse"
+            }
+          ]
+        },
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "Classes",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-1.2.0/pkg/classes/petitiorequest.petitiorequest-1"
+            },
+            {
+              "type": "doc",
+              "id": "version-1.2.0/pkg/classes/petitioresponse.petitioresponse-1"
+            }
+          ]
+        },
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "Interfaces",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-1.2.0/pkg/interfaces/petitiorequest.timeoutoptions"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

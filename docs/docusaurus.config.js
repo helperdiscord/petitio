@@ -4,7 +4,7 @@ module.exports = {
 	title: "Petitio",
 	tagline: "Zero-dependency HTTP library designed to be simple, fast, and type-strong.",
 	url: "https://helperdiscord.github.io/petitio",
-	baseUrl: "/",
+	baseUrl: "/petitio/",
 	onBrokenLinks: "throw",
 	onBrokenMarkdownLinks: "throw",
 	i18n: {

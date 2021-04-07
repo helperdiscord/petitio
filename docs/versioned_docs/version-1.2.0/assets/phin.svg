@@ -1,0 +1,20 @@
+<svg width="120.5" height="20" viewBox="0 0 1205 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="install size: 23.0 kB">
+  <title>install size: 23.0 kB</title>
+  <linearGradient id="a" x2="0" y2="100%">
+    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <mask id="m"><rect width="1205" height="200" rx="30" fill="#FFF"/></mask>
+  <g mask="url(#m)">
+    <rect width="676" height="200" fill="#555"/>
+    <rect width="529" height="200" fill="#44CC11" x="676"/>
+    <rect width="1205" height="200" fill="url(#a)"/>
+  </g>
+  <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
+    <text x="60" y="148" textLength="576" fill="#000" opacity="0.25">install size</text>
+    <text x="50" y="138" textLength="576">install size</text>
+    <text x="731" y="148" textLength="429" fill="#000" opacity="0.25">23.0 kB</text>
+    <text x="721" y="138" textLength="429">23.0 kB</text>
+  </g>
+  
+</svg>

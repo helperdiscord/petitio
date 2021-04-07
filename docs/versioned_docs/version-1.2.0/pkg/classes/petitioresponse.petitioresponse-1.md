@@ -29,7 +29,7 @@ This is updated in chunks through [PetitioResponse._addChunk](petitioresponse.pe
 from [PetitioRequest.send](petitiorequest.petitiorequest-1.md#send) or directly on a response object from
 another source.
 
-Defined in: [lib/PetitioResponse.ts:12](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L12)
+Defined in: [lib/PetitioResponse.ts:12](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioResponse.ts#L12)
 
 ___
 
@@ -42,7 +42,7 @@ This is updated through [PetitioResponse._parseHeaders](petitioresponse.petitior
 
 #### Type declaration:
 
-Defined in: [lib/PetitioResponse.ts:17](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L17)
+Defined in: [lib/PetitioResponse.ts:17](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioResponse.ts#L17)
 
 ___
 
@@ -54,7 +54,7 @@ The status code received from the server.
 This is set only after the response is complete when headers are received
 or it can be set manually.
 
-Defined in: [lib/PetitioResponse.ts:23](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L23)
+Defined in: [lib/PetitioResponse.ts:23](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioResponse.ts#L23)
 
 ## Methods
 
@@ -76,7 +76,7 @@ Name | Type | Description |
 
 In place operation with no return.
 
-Defined in: [lib/PetitioResponse.ts:32](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L32)
+Defined in: [lib/PetitioResponse.ts:32](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioResponse.ts#L32)
 
 ___
 
@@ -94,7 +94,7 @@ Name | Type | Description |
 
 In place operation with no return.
 
-Defined in: [lib/PetitioResponse.ts:43](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L43)
+Defined in: [lib/PetitioResponse.ts:43](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioResponse.ts#L43)
 
 ___
 
@@ -118,7 +118,7 @@ Name | Type | Default value |
 
 A serialized object result parsed from the response body.
 
-Defined in: [lib/PetitioResponse.ts:62](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L62)
+Defined in: [lib/PetitioResponse.ts:62](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioResponse.ts#L62)
 
 ___
 
@@ -136,4 +136,4 @@ Name | Type | Default value |
 
 The response body decoded as as a string from the buffer, using either the encoding specified in `encoding` or UTF-8 by default..
 
-Defined in: [lib/PetitioResponse.ts:70](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L70)
+Defined in: [lib/PetitioResponse.ts:70](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioResponse.ts#L70)

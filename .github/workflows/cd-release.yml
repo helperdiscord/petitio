@@ -77,8 +77,8 @@ jobs:
           git config --global user.email contact@kludge-cs.co.uk
           mkdir $GITHUB_WORKSPACE/../transfer
           PACKAGE_VERSION=$(node -pe "require('./package.json').version")
-          TARBALL=$(npm pack)
-          cp $TARBALL $GITHUB_WORKSPACE/../transfer
+          npm pack
+          cp *.tgz $GITHUB_WORKSPACE/../transfer
           if [[ $(git checkout build) ]]; then
             echo -e "# Using existing build"
             git restore --staged . || true
@@ -89,8 +89,8 @@ jobs:
             git commit --allow-empty -m 'chore: initial commit' || true
           fi
           git clean -fdx && git reset --hard HEAD
-          git rm -rf . && cp -r $GITHUB_WORKSPACE/../transfer/$TARBALL ./
-          tar -xf $TARBALL && rm $TARBALL
+          git rm -rf . && cp -r $GITHUB_WORKSPACE/../transfer/*.tgz ./
+          tar -xf *.tgz && rm *.tgz
           git add .
           git commit -m "build: v${PACKAGE_VERSION}" || true
           git push --set-upstream origin build

@@ -3,15 +3,11 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "docs/**"
   pull_request:
     branches:
       - master
-    paths:
-      - "docs/**"
   release:
-    types: [published]
+    types: [created]
 jobs:
   test:
     name: Build Documentation
@@ -89,7 +85,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
       - name: "[EXEC] Deploy documentation"
-        run: npm run deploy
+        run: |
+          git config --global user.name 'Kludge Cyber Systems (CI)'
+          git config --global user.email contact@kludge-cs.co.uk
+          npm run deploy
         working-directory: ./docs
         env:
           USE_SSH: true

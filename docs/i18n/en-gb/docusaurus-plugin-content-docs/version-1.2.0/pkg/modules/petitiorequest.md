@@ -26,4 +26,4 @@ hide_title: true
 
 Accepted HTTP methods (currently only supports up to HTTP/1.1).
 
-Defined in: [lib/PetitioRequest.ts:19](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L19)
+Defined in: [lib/PetitioRequest.ts:19](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioRequest.ts#L19)
