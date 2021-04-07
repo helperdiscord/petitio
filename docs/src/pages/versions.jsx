@@ -19,7 +19,8 @@ export default function Versions() {
 
 	let latestTable;
 	if (latest) {
-		latestTable = <VersionTable id="latest" label={<Translate>Latest</Translate>}
+		latestTable = <VersionTable id="latest"
+			label={<Translate>Latest</Translate>}
 			description={<Translate>
 				Here you can find the documentation for the
 				latest released version.
@@ -42,12 +43,12 @@ export default function Versions() {
 			<Version
 				label={current.label}
 				path={current.path}
-				notes={`${repoUrl}/releases/tag/v${current.name}`} />
+				notes={repoUrl} />
 		</VersionTable>;
 	}
 
 	let pastTable;
-	if (past) {
+	if (past.length) {
 		pastTable = <VersionTable id="archive"
 			label={<Translate>Previous versions (unmaintained)</Translate>}
 			description={<Translate>
