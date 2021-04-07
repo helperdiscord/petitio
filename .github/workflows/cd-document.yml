@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: docs/node_modules
-          key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('docs/**/package-lock.json') }}
       - name: "[INIT] Install dependencies"
         if: ${{ !steps.cache-restore.outputs.cache-hit }}
         run: cd docs && npm ci
@@ -59,7 +59,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: docs/node_modules
-          key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('docs/**/package-lock.json') }}
       - name: "[INIT] Install dependencies"
         if: ${{ !steps.cache-restore.outputs.cache-hit }}
         run: cd docs && npm ci
