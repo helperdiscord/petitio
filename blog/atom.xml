@@ -10,7 +10,7 @@
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
         <id>welcome</id>
-        <link href="https://helperdiscord.github.io/petitio/blog/welcome"/>
+        <link href="https://helperdiscord.github.io/petitio/petitio/blog/welcome"/>
         <updated>2021-04-06T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[Welcome! This will be my first blog post as a developer of Petitio and for]]></summary>
     </entry>

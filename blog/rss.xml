@@ -9,7 +9,7 @@
         <generator>https://github.com/jpmonette/feed</generator>
         <item>
             <title><![CDATA[Welcome]]></title>
-            <link>https://helperdiscord.github.io/petitio/blog/welcome</link>
+            <link>https://helperdiscord.github.io/petitio/petitio/blog/welcome</link>
             <guid>welcome</guid>
             <pubDate>Tue, 06 Apr 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[Welcome! This will be my first blog post as a developer of Petitio and for]]></description>
