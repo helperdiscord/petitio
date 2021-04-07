@@ -26,7 +26,7 @@ describe("parseHeaders", () => {
 			expect(res.headers).toEqual(parsedHeaders);
 		});
 
-		test("IF headers exist THEN array / append", () => {
+		test("IF headers exist THEN array", () => {
 			const headersArray = ["b", "2", "c", "3", "a", "4"];
 			const parsedHeaders = {"a": ["1", "4"], "b": "2", "c": "3"};
 
@@ -34,6 +34,19 @@ describe("parseHeaders", () => {
 
 			const res = new PetitioResponse();
 			res.headers = {"a": "1"};
+			res._parseHeaders(headersArray);
+
+			expect(res.headers).toEqual(parsedHeaders);
+		});
+
+		test("IF array headers exist THEN append", () => {
+			const headersArray = ["b", "2", "c", "3", "a", "5"];
+			const parsedHeaders = {"a": ["1", "4", "5"], "b": "2", "c": "3"};
+
+			expect.assertions(1);
+
+			const res = new PetitioResponse();
+			res.headers = {"a": ["1", "4"]};
 			res._parseHeaders(headersArray);
 
 			expect(res.headers).toEqual(parsedHeaders);

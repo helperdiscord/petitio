@@ -105,9 +105,7 @@ export class PetitioRequest {
 	 */
 	public query(key: Record<string, any>): this
 	public query(key: string | Record<string, any>, value?: any): this {
-		if (typeof key === "object") Object.keys(key).forEach((query) => {
-			this.url.searchParams.append(query, key[query]);
-		});
+		if (typeof key === "object") for (const qy of Object.keys(key)) this.url.searchParams.append(qy, key[qy]);
 		else this.url.searchParams.append(key, value);
 
 		return this;
@@ -201,9 +199,9 @@ export class PetitioRequest {
 	 */
 	public header(header: Record<string, string>): this
 	public header(header: string | Record<string, string>, value?: string): this {
-		if (typeof header === "object") Object.keys(header).forEach((headerName) => {
-			this.reqHeaders[headerName.toLowerCase()] = header[headerName];
-		});
+		// eslint-disable-next-line max-len
+		if (typeof header === "object") for (const hN of Object.keys(header)) this.reqHeaders[hN.toLowerCase()] = header[hN];
+
 		else this.reqHeaders[header.toLowerCase()] = value;
 
 		return this;
@@ -251,7 +249,7 @@ export class PetitioRequest {
 	 */
 	public option<T extends keyof ClientType.Options>(key: T, value: ClientType.Options[T]): this
 	public option(key: keyof ClientType.Options | ClientType.Options, value?: any) {
-		if (typeof key === "object") this.coreOptions = {...this.coreOptions, ...key};
+		if (typeof key === "object") Object.assign(this.coreOptions, key);
 		else this.coreOptions[key] = value;
 
 		return this;
