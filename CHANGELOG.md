@@ -1,3 +1,21 @@
+# [1.2.0](https://github.com/helperdiscord/petitio/compare/v1.1.0...v1.2.0) (2021-04-07)
+
+
+### Bug Fixes
+
+* **PetitioResponse:** support non-ascii json responses ([#11](https://github.com/helperdiscord/petitio/issues/11)) ([d8344e4](https://github.com/helperdiscord/petitio/commit/d8344e44bb2ca247082c7f330354a76869e49793))
+
+
+### Features
+
+* add support for stream ([c706801](https://github.com/helperdiscord/petitio/commit/c7068011464ce003d4443ab975b48bab9b0ac74f))
+* add text encoding option & tests ([7f6f5c6](https://github.com/helperdiscord/petitio/commit/7f6f5c63f3dddc2838c7dc1975c8a5c9335f120d))
+
+
+### Performance Improvements
+
+* remove spread operators and callback loops ([#12](https://github.com/helperdiscord/petitio/issues/12)) ([3bf48cc](https://github.com/helperdiscord/petitio/commit/3bf48cc1d002fb342af932f720dfc833c94461fe))
+
 # [1.1.0](https://github.com/helperdiscord/petitio/compare/v1.0.0...v1.1.0) (2021-03-22)
 
 
