@@ -29,19 +29,17 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - name: "[INIT] Switch to docs directory"
-        run: cd docs
       - name: "[INIT] Restore dependency cache"
         id: cache-restore
         uses: actions/cache@v2
         with:
-          path: node_modules
+          path: docs/node_modules
           key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('**/package-lock.json') }}
       - name: "[INIT] Install dependencies"
         if: ${{ !steps.cache-restore.outputs.cache-hit }}
-        run: npm ci
+        run: cd docs && npm ci
       - name: "[EXEC] Build documentation"
-        run: npm run build
+        run: cd docs && npm run build
   deploy:
     name: Deploy to GitHub Pages
     if: github.event_name == 'push'
@@ -56,23 +54,21 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - name: "[INIT] Switch to docs directory"
-        run: cd docs
       - name: "[INIT] Restore dependency cache"
         id: cache-restore
         uses: actions/cache@v2
         with:
-          path: node_modules
+          path: docs/node_modules
           key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('**/package-lock.json') }}
       - name: "[INIT] Install dependencies"
         if: ${{ !steps.cache-restore.outputs.cache-hit }}
-        run: npm ci
+        run: cd docs && npm ci
       - name: "[INIT] Setup ssh-agent"
         uses: webfactory/ssh-agent@v0.5.2
         with:
           ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
       - name: "[EXEC] Deploy documentation"
-        run: npm run deploy
+        run: cd docs && npm run deploy
         env:
           USE_SSH: true
           GIT_USER: kludge-cs
@@ -90,23 +86,22 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - name: "[INIT] Switch to docs directory"
-        run: cd docs
       - name: "[INIT] Restore dependency cache"
         id: cache-restore
         uses: actions/cache@v2
         with:
-          path: node_modules
+          path: docs/node_modules
           key: ${{ runner.os }}-node${{ matrix.node }}-docs${{ hashFiles('**/package-lock.json') }}
       - name: "[INIT] Install dependencies"
         if: ${{ !steps.cache-restore.outputs.cache-hit }}
-        run: npm ci
+        run: cd docs && npm ci
       - name: "[INIT] Setup ssh-agent"
         uses: webfactory/ssh-agent@v0.5.2
         with:
           ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
       - name: "[EXEC] Version & deploy documentation"
         run: |
+          cd docs
           git config --global user.name 'Kludge Cyber Systems (CI)'
           git config --global user.email contact@kludge-cs.co.uk
           PACKAGE_VERSION=$(node -pe "require('./package.json').version")
