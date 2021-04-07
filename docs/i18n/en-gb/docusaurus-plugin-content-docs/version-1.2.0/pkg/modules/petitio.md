@@ -31,4 +31,4 @@ Name | Type | Default value | Description |
 
 The Petitio request instance for your URL.
 
-Defined in: [index.ts:5](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/index.ts#L5)
+Defined in: [index.ts:5](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/index.ts#L5)

@@ -18,7 +18,7 @@ hide_title: true
 
 • `Optional` **bodyTimeout**: *number*
 
-Defined in: [lib/PetitioRequest.ts:24](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L24)
+Defined in: [lib/PetitioRequest.ts:24](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioRequest.ts#L24)
 
 ___
 
@@ -26,7 +26,7 @@ ___
 
 • `Optional` **headersTimeout**: *number*
 
-Defined in: [lib/PetitioRequest.ts:25](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L25)
+Defined in: [lib/PetitioRequest.ts:25](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioRequest.ts#L25)
 
 ___
 
@@ -34,4 +34,4 @@ ___
 
 • `Optional` **keepAliveTimeout**: *number*
 
-Defined in: [lib/PetitioRequest.ts:26](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L26)
+Defined in: [lib/PetitioRequest.ts:26](https://github.com/helperdiscord/petitio/blob/c80cdcc/src/lib/PetitioRequest.ts#L26)
