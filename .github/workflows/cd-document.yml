@@ -1,3 +1,4 @@
+name: "CD: Document"
 on:
   push:
     branches:
@@ -14,7 +15,7 @@ on:
 jobs:
   test:
     name: Build Documentation
-    if: github.event_name == "pull_request"
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -43,7 +44,7 @@ jobs:
         run: npm run build
   deploy:
     name: Deploy to GitHub Pages
-    if: github.event_name == "push"
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -77,7 +78,7 @@ jobs:
           GIT_USER: kludge-cs
   version-deploy:
     name: Version for Release & Deploy to GitHub Pages
-    if: github.event_name == "release"
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     strategy:
       matrix:
