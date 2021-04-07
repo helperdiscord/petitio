@@ -117,14 +117,14 @@ module.exports = {
 			{
 				docs: {
 					sidebarPath: require.resolve("./sidebars.js"),
-					editUrl: "https://github.com/helperdiscord/petitio/edit/master/docs/docs/",
+					editUrl: "https://github.com/helperdiscord/petitio/edit/master/docs/",
 					editCurrentVersion: false,
 					editLocalizedFiles: true,
 					showLastUpdateTime: true
 				},
 				blog: {
 					showReadingTime: true,
-					editUrl: "https://github.com/helperdiscord/petitio/edit/master/docs/blog/",
+					editUrl: "https://github.com/helperdiscord/petitio/edit/master/docs/",
 					editLocalizedFiles: true
 				},
 				theme: {
