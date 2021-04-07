@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unpublished-require */
 module.exports = {
 	docs: [
 		{
@@ -5,6 +6,13 @@ module.exports = {
 			label: "Guides",
 			items: [
 				"guides/getting-started"
+			]
+		},
+		{
+			type: "category",
+			label: "Metrics",
+			items: [
+				"metrics/performance"
 			]
 		},
 		{

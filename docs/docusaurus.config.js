@@ -53,6 +53,11 @@ module.exports = {
 					position: "left"
 				},
 				{
+					to: "docs/metrics/performance",
+					label: "Performance",
+					position: "left"
+				},
+				{
 					type: "docsVersionDropdown",
 					position: "right",
 					dropdownItemsBefore: [],
