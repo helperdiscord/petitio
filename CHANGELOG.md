@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/helperdiscord/petitio/compare/v1.2.0...v1.2.1) (2021-04-07)
+
+
+### Bug Fixes
+
+* **docs:** new baseUrl ([cc50d17](https://github.com/helperdiscord/petitio/commit/cc50d176ad14f2ca10a865c3eb0ed7d2b511f84a))
+
 # [1.2.0](https://github.com/helperdiscord/petitio/compare/v1.1.0...v1.2.0) (2021-04-07)
 
 
