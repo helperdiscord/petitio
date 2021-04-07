@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Petitio Blog</title>
+        <link>https://helperdiscord.github.io/petitio/blog</link>
+        <description>Petitio Blog</description>
+        <lastBuildDate>Tue, 06 Apr 2021 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <item>
+            <title><![CDATA[Welcome]]></title>
+            <link>https://helperdiscord.github.io/petitio/blog/welcome</link>
+            <guid>welcome</guid>
+            <pubDate>Tue, 06 Apr 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[Welcome! This will be my first blog post as a developer of Petitio and for]]></description>
+        </item>
+    </channel>
+</rss>
