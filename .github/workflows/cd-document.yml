@@ -137,6 +137,10 @@ jobs:
           git config --global user.email contact@kludge-cs.co.uk
           PACKAGE_VERSION=$(node -pe "require('../package.json').version")
           npm run docusaurus docs:version $PACKAGE_VERSION
+          for locale in $(ls i18n); do
+            mkdir -p i18n/$locale/docusaurus-plugin-content-docs/$PACKAGE_VERSION
+            cp -r docs/* i18n/$locale/docusaurus-plugin-content-docs/$PACKAGE_VERSION
+          done
           git add .
           git commit -m "docs: add version $PACKAGE_VERSION"
           git push || true
