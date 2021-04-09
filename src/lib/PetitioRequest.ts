@@ -4,6 +4,7 @@
 
 // @ts-expect-error 7016 - Unusual type exports
 import Client from "undici/lib/core/client";
+// eslint-disable-next-line node/no-missing-import
 import type ClientType from "undici/types/client";
 import type { IncomingHttpHeaders } from "http";
 import type { ParsedUrlQueryInput } from "querystring";
