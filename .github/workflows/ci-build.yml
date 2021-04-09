@@ -51,6 +51,8 @@ jobs:
           git clean -fdx && git reset --hard HEAD
           git rm -rf . && cp -r $GITHUB_WORKSPACE/../transfer/*.tgz ./
           tar -xf *.tgz && rm *.tgz
+          mv ./package/* .
+          rm -rf package
           git add .
           git commit -m "build: v${PACKAGE_VERSION}" || true
           git push --set-upstream origin build
