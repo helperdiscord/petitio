@@ -11,7 +11,7 @@ import { URL } from "url";
 /**
  * Accepted HTTP methods (currently only supports up to HTTP/1.1).
  */
-export declare type HTTPMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
+export declare type HTTPMethod = "GET" | "HEAD" | "POST" | "OPTIONS" | "PUT" | "DELETE" | "TRACE" | "CONNECT" | "PATCH";
 /**
  * @see [Undici ClientOptions timeout documentation](https://github.com/nodejs/undici/blob/main/docs/api/Client.md#parameter-clientoptions)
  */
