@@ -16,7 +16,7 @@ import { stringify } from "querystring"; // eslint-disable-line no-duplicate-imp
 /**
  * Accepted HTTP methods (currently only supports up to HTTP/1.1).
  */
-export type HTTPMethod = "GET" | "HEAD" | "POST" | "PATCH" | "DELETE" | "PUT";
+export type HTTPMethod = "GET" | "HEAD" | "POST" | "OPTIONS" | "PUT" | "DELETE" | "TRACE" | "CONNECT" | "PATCH";
 /**
  * @see [Undici ClientOptions timeout documentation](https://github.com/nodejs/undici/blob/main/docs/api/Client.md#parameter-clientoptions)
  */
