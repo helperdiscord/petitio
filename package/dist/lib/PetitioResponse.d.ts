@@ -41,11 +41,13 @@ export declare class PetitioResponse {
     _parseHeaders(headers: string[]): void;
     /**
      * @template T Type casting parameter for the JSON result.
-     * @return {*} A serialized object result parsed from the response body.
+     * @param {BufferEncoding} [encoding="utf8"] The encoding to use when parsing the response body.
+     * @return {T} A serialized object result parsed from the response body.
      */
-    json<T = any>(): T;
+    json<T = any>(encoding?: BufferEncoding): T;
     /**
-     * @return {*} The response body decoded as a UTF-8 string from the buffer.
+     * @param {BufferEncoding} [encoding="utf8"] The encoding to use.
+     * @return {string} The response body decoded as as a string from the buffer, using either the encoding specified in `encoding` or UTF-8 by default..
      */
-    text(): string;
+    text(encoding?: BufferEncoding): string;
 }

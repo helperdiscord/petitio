@@ -8,8 +8,8 @@ Credit to [Centra] for inspiration, as Petitio was originally a fork.
 
 Useful links:
 - [Docs](https://helperdiscord.github.io/petitio)
-- [Usage examples](USAGE.md)
-- [Benchmarks / comparison](PERFORMANCE.md)
+- [Usage examples](https://github.com/helperdiscord/petitio/tree/master/USAGE.md)
+- [Benchmarks / comparison](https://github.com/helperdiscord/petitio/tree/master/PERFORMANCE.md)
 
 ## What's with the name?
 

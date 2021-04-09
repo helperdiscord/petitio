@@ -6,6 +6,7 @@ import type ClientType from "undici/types/client";
 import type { IncomingHttpHeaders } from "http";
 import type { ParsedUrlQueryInput } from "querystring";
 import { PetitioResponse } from "./PetitioResponse";
+import type { Readable } from "stream";
 import { URL } from "url";
 /**
  * Accepted HTTP methods (currently only supports up to HTTP/1.1).
@@ -27,8 +28,10 @@ export declare class PetitioRequest {
     coreOptions: ClientType.Options;
     /**
      * The data to be sent as the request body.
+     * This will be a buffer or string for normal requests, or a stream.Readable
+     * if the request is to be sent as a stream.
      */
-    data?: string | Buffer;
+    data?: Buffer | string | Readable;
     /**
      * @see [[HTTPMethod]]
      */
@@ -110,6 +113,13 @@ export declare class PetitioRequest {
      * set to the URL encoded version of the query string.
      */
     body(data: ParsedUrlQueryInput | string, sendAs: "form"): this;
+    /**
+     * @param {*} data The data to be set for the request body.
+     * @param {*} sendAs If data is a stream.Readable *AND* this is set to
+     * `stream`, the body will be sent as the stream with no modifications to
+     * it or the headers.
+     */
+    body(data: Readable, sendAs: "stream"): this;
     /**
      * @param {*} header The encoded header name to set.
      * @param {*} value The value to set the header to.
