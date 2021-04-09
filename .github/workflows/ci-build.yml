@@ -1,0 +1,60 @@
+name: "CI: Build"
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14]
+    steps:
+      - name: "[INIT] Checkout repository"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "[INIT] Setup Node.js ${{ matrix.node }}"
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: "[INIT] Restore dependency cache"
+        id: cache-restore
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+      - name: "[INIT] Install dependencies"
+        if: ${{ !steps.cache-restore.outputs.cache-hit }}
+        run: npm ci
+      - name: "[EXEC] Build"
+        run: npm run build
+      - name: "[EXEC] Update build branch"
+        run: |
+          git pull || true
+          git config --global user.name 'Kludge Cyber Systems (CI)'
+          git config --global user.email contact@kludge-cs.co.uk
+          mkdir $GITHUB_WORKSPACE/../transfer
+          PACKAGE_VERSION=$(node -pe "require('./package.json').version")
+          npm pack
+          cp *.tgz $GITHUB_WORKSPACE/../transfer
+          if [[ $(git checkout build) ]]; then
+            echo -e "# Using existing build"
+            git restore --staged . || true
+          else
+            echo -e "# Creating orphan build"
+            git checkout --orphan build
+            git rm --cached -r .
+            git commit --allow-empty -m 'chore: initial commit' || true
+          fi
+          git clean -fdx && git reset --hard HEAD
+          git rm -rf . && cp -r $GITHUB_WORKSPACE/../transfer/*.tgz ./
+          tar -xf *.tgz && rm *.tgz
+          mv ./package/* .
+          rm -rf package
+          git add .
+          git commit -m "build: v${PACKAGE_VERSION}" || true
+          git push --set-upstream origin build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
