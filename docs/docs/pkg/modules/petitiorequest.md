@@ -22,7 +22,7 @@ hide_title: true
 
 ### HTTPMethod
 
-Ƭ **HTTPMethod**: *GET* \| *HEAD* \| *POST* \| *PATCH* \| *DELETE* \| *PUT*
+Ƭ **HTTPMethod**: *GET* \| *HEAD* \| *POST* \| *OPTIONS* \| *PUT* \| *DELETE* \| *TRACE* \| *CONNECT* \| *PATCH*
 
 Accepted HTTP methods (currently only supports up to HTTP/1.1).
 
