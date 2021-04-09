@@ -5,11 +5,11 @@
 export class PetitioResponse {
 	/**
 	 * The response body received from the server.
-	 * This is updated in chunks through [[PetitioResponse._addChunk]], either
+	 * This is updated through [[PetitioResponse._addBody]], either
 	 * from [[PetitioRequest.send]] or directly on a response object from
 	 * another source.
 	 */
-	public body: Buffer = Buffer.alloc(0);
+	public body!: Buffer;
 	/**
 	 * The response headers received from the server.
 	 * This is updated through [[PetitioResponse._parseHeaders]].
@@ -23,14 +23,13 @@ export class PetitioResponse {
 	public statusCode: number | null = null;
 
 	/**
-	 * This appends data to the body, dynamically reallocating the buffer size
-	 * as chunks are added. Therefore, this is currently unsuitable for handling
-	 * large responses, as the exact size is allocated in memory as a buffer.
+	 * This takes the data chunks and creates a Buffer, and it sets
+	 * that buffer as the body.
 	 * @param {*} chunk The chunk of data to append to the body.
 	 * @return {*} In place operation with no return.
 	 */
-	public _addChunk(chunk: Buffer | Uint8Array) {
-		this.body = Buffer.concat([this.body, chunk]);
+	public _addBody(chunk: Buffer[] | Uint8Array[]) {
+		this.body = Buffer.concat(chunk);
 	}
 
 	/**
