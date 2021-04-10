@@ -1,0 +1,1 @@
+petitio x 5,838 ops/sec ±8.99% (71 runs sampled)
