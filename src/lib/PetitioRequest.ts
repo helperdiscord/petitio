@@ -106,8 +106,14 @@ export class PetitioRequest {
 	 */
 	public query(key: Record<string, any>): this
 	public query(key: string | Record<string, any>, value?: any): this {
-		if (typeof key === "object") for (const qy of Object.keys(key)) this.url.searchParams.append(qy, key[qy]);
-		else this.url.searchParams.append(key, value);
+		if (typeof key === "object") {
+			const keys = Object.keys(key);
+			// eslint-disable-next-line @typescript-eslint/prefer-for-of, no-plusplus
+			for (let ii = 0; ii < keys.length; ++ii) {
+				const val = keys[ii];
+				this.url.searchParams.append(val, key[val]);
+			}
+		} else this.url.searchParams.append(key, value);
 
 		return this;
 	}
@@ -201,9 +207,15 @@ export class PetitioRequest {
 	public header(header: Record<string, string>): this
 	public header(header: string | Record<string, string>, value?: string): this {
 		// eslint-disable-next-line max-len
-		if (typeof header === "object") for (const hN of Object.keys(header)) this.reqHeaders[hN.toLowerCase()] = header[hN];
+		if (typeof header === "object") {
+			const keys = Object.keys(header);
 
-		else this.reqHeaders[header.toLowerCase()] = value;
+			// eslint-disable-next-line @typescript-eslint/prefer-for-of, no-plusplus
+			for (let ii = 0; ii < keys.length; ++ii) {
+				const val = keys[ii];
+				this.reqHeaders[val.toLowerCase()] = header[val];
+			}
+		} else this.reqHeaders[header.toLowerCase()] = value;
 
 		return this;
 	}
