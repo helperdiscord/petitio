@@ -2,6 +2,7 @@
  * @module PetitioRequest
  */
 /// <reference types="node" />
+import type AbortController from "node-abort-controller";
 import type ClientType from "undici/types/client";
 import type { IncomingHttpHeaders } from "http";
 import type { ParsedUrlQueryInput } from "querystring";
@@ -59,6 +60,11 @@ export declare class PetitioRequest {
      */
     url: URL;
     /**
+     * The AbortController attached to the request
+     * enableable with [[PetitioRequest.signal]]
+     */
+    controller?: AbortController;
+    /**
      * @param {(string | URL)} url The URL to start composing a request for.
      * @param {HTTPMethod} [httpMethod="GET"] The HTTP method to use.
      * @return {PetitioRequest} The Petitio request instance for your URL.
@@ -93,6 +99,17 @@ export declare class PetitioRequest {
      * would resolve to `https://example.org/hello/petitio`.
      */
     path(relativePath: string): this;
+    /**
+     * @param {AbortController} controller A controller instance that handles aborting the request.
+     * @return {*} The request object for further composition.
+     * @example
+     * ```ts
+     * const controller = new AbortController();
+     * const result = petitio(URL).signal(controller);
+     * setTimeout(() => controller.abort(), 5000) // serves as a request timeout
+     * ```
+     */
+    signal(controller: AbortController): this;
     /**
      * @param {*} data The data to be set for the request body.
      */
