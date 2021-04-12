@@ -294,7 +294,7 @@ export class PetitioRequest {
 				body: this.data
 			};
 
-			const client = this.kClient ?? new Client(this.url.origin, this.coreOptions);
+			const client = this.kClient ? this.kClient : new Client(this.url.origin, this.coreOptions);
 
 			const res: PetitioResponse = new PetitioResponse();
 
