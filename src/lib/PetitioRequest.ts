@@ -2,6 +2,7 @@
  * @module PetitioRequest
  */
 
+import type AbortController from "node-abort-controller";
 // @ts-expect-error 7016 - Unusual type exports
 import Client from "undici/lib/core/client";
 // eslint-disable-next-line node/no-missing-import
@@ -13,7 +14,6 @@ import type { Readable } from "stream";
 import { URL } from "url";
 import { join } from "path";
 import { stringify } from "querystring"; // eslint-disable-line no-duplicate-imports
-
 /**
  * Accepted HTTP methods (currently only supports up to HTTP/1.1).
  */
@@ -65,6 +65,11 @@ export class PetitioRequest {
 	 * The URL destination for the request, targeted in [[PetitioRequest.send]].
 	 */
 	public url: URL;
+	/**
+	 * The AbortController attached to the request
+	 * enableable with [[PetitioRequest.signal]]
+	 */
+	public controller?: AbortController;
 
 	/**
 	 * @param {(string | URL)} url The URL to start composing a request for.
@@ -126,6 +131,21 @@ export class PetitioRequest {
 	 */
 	public path(relativePath: string): this {
 		this.url.pathname = join(this.url.pathname, relativePath);
+
+		return this;
+	}
+	/**
+	 * @param {AbortController} controller A controller instance that handles aborting the request.
+	 * @return {*} The request object for further composition.
+	 * @example
+	 * ```ts
+	 * const controller = new AbortController();
+	 * const result = petitio(URL).signal(controller);
+	 * setTimeout(() => controller.abort(), 5000) // serves as a request timeout
+	 * ```
+	 */
+	public signal(controller: AbortController): this {
+		this.controller = controller;
 
 		return this;
 	}
@@ -304,7 +324,8 @@ export class PetitioRequest {
 				path: this.url.pathname + this.url.search,
 				method: this.httpMethod,
 				headers: this.reqHeaders,
-				body: this.data
+				body: this.data,
+				signal: this.controller
 			};
 
 			const client = this.kClient ?? new Client(this.url.origin, this.coreOptions);

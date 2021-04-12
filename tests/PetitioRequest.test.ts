@@ -1,3 +1,4 @@
+import AbortController from "node-abort-controller";
 import { Client } from "undici";
 import { URL as NURL } from "url";
 import { PetitioRequest } from "../src/lib/PetitioRequest";
@@ -277,6 +278,19 @@ describe("PetitioRequest", () => {
 			const URL = new NURL("https://nothing.nowhere");
 
 			return expect(new PetitioRequest(URL).send()).rejects.toThrow();
+		});
+	});
+
+	describe("SIGNAL", () => {
+		const controller = new AbortController();
+		test("CHECK THAT passed controller MATCH controller", () => {
+			expect.assertions(1);
+
+			const URL = "https://postman-echo.com/get";
+
+			const request = new PetitioRequest(URL).signal(controller);
+
+			expect(request.controller).toEqual(controller);
 		});
 	});
 });
