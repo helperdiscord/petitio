@@ -4,7 +4,8 @@
 
 // @ts-expect-error 7016 - Unusual type exports
 import Client from "undici/lib/core/client";
-import type ClientType from "undici/types/client"; // eslint-disable-line node/no-missing-import
+// eslint-disable-next-line node/no-missing-import
+import type ClientType from "undici/types/client";
 import type { IncomingHttpHeaders } from "http";
 import type { ParsedUrlQueryInput } from "querystring";
 import { PetitioResponse } from "./PetitioResponse";
@@ -297,14 +298,16 @@ export class PetitioRequest {
 			const client = this.kClient ?? new Client(this.url.origin, this.coreOptions);
 
 			const res: PetitioResponse = new PetitioResponse();
+			const data: Uint8Array[] | Buffer[] = [];
 
 			client.dispatch(options, {
-				onData: (data: Buffer) => {
-					return res._addChunk(data);
+				onData: (buff: Buffer) => {
+					return data.push(buff);
 				},
 				onError: (err: Error) => reject(err),
 				onComplete: () => {
 					if (!this.keepClient) client.close();
+					res._addBody(data);
 					resolve(res);
 				},
 				onConnect: () => null,

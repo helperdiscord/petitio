@@ -44,7 +44,7 @@ describe("PetitioResponse", () => {
 
 		test("ADDING BUFFER TO RESPONSE", () => {
 			const res = new PetitioResponse();
-			res._addChunk(buffer);
+			res._addBody([buffer]);
 
 			const final = res.json();
 
@@ -56,7 +56,7 @@ describe("PetitioResponse", () => {
 		const buffer = Buffer.from(text);
 		test("TEXT", () => {
 			const res = new PetitioResponse();
-			res._addChunk(buffer);
+			res._addBody([buffer]);
 
 			const final = res.text();
 
@@ -70,7 +70,7 @@ describe("PetitioResponse", () => {
 		const encoded = buffer.toString("base64");
 		test("BASE64", () => {
 			const res = new PetitioResponse();
-			res._addChunk(buffer);
+			res._addBody([buffer]);
 
 			const final = res.text("base64");
 
