@@ -8,6 +8,7 @@ esbuild.build({
 	minify: true,
 	outfile: "./dist/index.js",
 	platform: "node",
+	target: "node12",
 	tsconfig: "tsconfig.json"
 }).catch((err) => {
 	throw (err);
