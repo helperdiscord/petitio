@@ -135,8 +135,14 @@ export class PetitioRequest {
 		return this;
 	}
 	/**
-	 * @param {AbortController} controller A AbortController to potentially abort the request.
+	 * @param {AbortController} controller A controller instance that handles aborting the request.
 	 * @return {*} The request object for further composition.
+	 * @example
+	 * ```ts
+	 * const controller = new AbortController();
+	 * const result = petitio(URL).signal(controller);
+	 * setTimeout(() => controller.abort(), 5000) // serves as a request timeout
+	 * ```
 	 */
 	public signal(controller: AbortController): this {
 		this.controller = controller;
