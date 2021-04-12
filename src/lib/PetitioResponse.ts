@@ -25,11 +25,12 @@ export class PetitioResponse {
 	/**
 	 * This takes the data chunks and creates a Buffer, and it sets
 	 * that buffer as the body.
-	 * @param {*} chunk The chunk of data to append to the body.
+	 * @param {*} chunks The body to set for the response.
 	 * @return {*} In place operation with no return.
 	 */
-	public _addBody(chunk: Buffer[] | Uint8Array[]) {
-		this.body = Buffer.concat(chunk);
+	public _addBody(chunks: Buffer[] | Uint8Array[]) {
+		const length = this.headers["content-length"];
+		this.body = Buffer.concat(chunks, length ? Number(length) : undefined);
 	}
 
 	/**
