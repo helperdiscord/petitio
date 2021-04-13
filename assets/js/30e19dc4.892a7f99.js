@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[15],{85:function(t){t.exports=JSON.parse('{"allTagsPath":"/petitio/blog/tags","slug":"http","name":"http","count":1,"permalink":"/petitio/blog/tags/http"}')}}]);
