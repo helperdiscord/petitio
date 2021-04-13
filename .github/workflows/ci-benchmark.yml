@@ -1,11 +1,16 @@
 name: "CI: Benchmark"
 on: [push, pull_request]
-
 jobs:
   benchmark:
     name: Benchmark
     if: "!(contains(github.event.head_commit.message, '[skip_ci]'))"
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      matrix:
+        node: [14]
     steps:
       - name: "[INIT] Checkout repository"
         uses: actions/checkout@v2
@@ -26,13 +31,13 @@ jobs:
         run: npm ci
       - name: "[INIT] Build"
         run: npm run build
-      - name: "[EXEC] Benchmark"
-        run: npm run --silent bench | tee .benchmarks/output.txt
-      - name: Download previous benchmark data
+      - name: "[INIT] Download previous benchmark data"
         uses: actions/cache@v1
         with:
           path: ./cache
           key: ${{ runner.os }}-benchmark
+      - name: "[EXEC] Benchmark"
+        run: npm run --silent bench | tee .benchmarks/output.txt
       - name: "[POST] Store benchmark results"
         uses: rhysd/github-action-benchmark@v1
         with:
@@ -40,9 +45,18 @@ jobs:
           tool: "benchmarkjs"
           output-file-path: .benchmarks/output.txt
           external-data-json-path: ./cache/benchmark-data.json
+          alert-threshold: "200%"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          auto-push: false
-          alert-threshold: '200%'
           alert-comment-cc-users: "@tbnritzdoge @nytelife26"
           comment-on-alert: true
           fail-on-alert: true
+      - name: "[POST] Push benchmark results"
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name 'Kludge Cyber Systems (CI)'
+          git config user.email contact@kludge-cs.co.uk
+          git add .benchmarks
+          git commit --no-verify -m 'chore: update benchmarks' || true
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

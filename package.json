@@ -34,6 +34,7 @@
 	},
 	"devDependencies": {
 		"@jest/types": "^26.6.2",
+		"@kludge-cs/bench-utils": "^1.0.1",
 		"@kludge-cs/eslint-config-js": "^1.2.0",
 		"@kludge-cs/eslint-config-ts": "^2.0.0",
 		"@semantic-release/changelog": "^5.0.1",
