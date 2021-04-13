@@ -4,6 +4,7 @@ const esbuild = require("esbuild");
 esbuild.build({
 	bundle: true,
 	entryPoints: ["./src/index.ts"],
+	external: ["_http_common"],
 	format: "cjs",
 	minify: true,
 	outfile: "./dist/index.js",
