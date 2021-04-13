@@ -1,3 +1,24 @@
+# [1.3.0](https://github.com/helperdiscord/petitio/compare/v1.2.1...v1.3.0) (2021-04-13)
+
+
+### Bug Fixes
+
+* change build target for backwards compat ([#25](https://github.com/helperdiscord/petitio/issues/25)) ([87cbbd3](https://github.com/helperdiscord/petitio/commit/87cbbd34851f132870e819d34d70bf032f7bde6f))
+* **ci:** make filepaths correct ([9299fc0](https://github.com/helperdiscord/petitio/commit/9299fc00137be6ea195d93c871395f22fd579196))
+
+
+### Features
+
+* abort-controllers ([#23](https://github.com/helperdiscord/petitio/issues/23)) ([1ad4a5d](https://github.com/helperdiscord/petitio/commit/1ad4a5d86044d3dd77c8234703189c162fe93134))
+* add all http methods ([#17](https://github.com/helperdiscord/petitio/issues/17)) ([f869666](https://github.com/helperdiscord/petitio/commit/f869666169a39c5f0baacc48d23b48c6a6073163))
+* **ci:** build on every commit ([443070b](https://github.com/helperdiscord/petitio/commit/443070b8b09a9b6b087f634bf16ab4d69c0f8783))
+
+
+### Performance Improvements
+
+* improve response buffer handling ([#20](https://github.com/helperdiscord/petitio/issues/20)) ([26d84e2](https://github.com/helperdiscord/petitio/commit/26d84e22d88359869a747c0828e4d21e0fbdce95))
+* optimize loops ([#24](https://github.com/helperdiscord/petitio/issues/24)) ([01b8012](https://github.com/helperdiscord/petitio/commit/01b80124bd8baa89e9b8ee4e40987c0cba1e57b8))
+
 ## [1.2.1](https://github.com/helperdiscord/petitio/compare/v1.2.0...v1.2.1) (2021-04-07)
 
 
