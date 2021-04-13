@@ -12,13 +12,13 @@ const defer = {"defer": true, "minSamples": 200};
 
 new Suite()
 	.add("petitio - base", async (deferred) => {
-		await petitio("https://localhost:8080/ok")
+		await petitio("http://localhost:8080/ok")
 			.client(client, true)
 			.send();
 		deferred.resolve();
 	}, defer)
 	.add("petitio - large body", async (deferred) => {
-		await petitio("https://localhost:8080/large")
+		await petitio("http://localhost:8080/large")
 			.client(client, true)
 			.send();
 		deferred.resolve();
