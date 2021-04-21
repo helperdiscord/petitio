@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/helperdiscord/petitio/compare/v1.3.0...v1.3.1) (2021-04-21)
+
+
+### Bug Fixes
+
+* support node 16 [ci_release] ([#28](https://github.com/helperdiscord/petitio/issues/28)) ([9d4dec5](https://github.com/helperdiscord/petitio/commit/9d4dec59f44d44742c765de6fc53c03aa4343e89))
+
 # [1.3.0](https://github.com/helperdiscord/petitio/compare/v1.2.1...v1.3.0) (2021-04-13)
 
 
