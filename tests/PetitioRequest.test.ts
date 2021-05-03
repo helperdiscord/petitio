@@ -1,3 +1,4 @@
+import type { HTTPMethod, TimeoutOptions } from "../src/lib/PetitioRequest";
 import AbortController from "node-abort-controller";
 import { Client } from "undici";
 import { URL as NURL } from "url";
@@ -5,292 +6,322 @@ import { PetitioRequest } from "../src/lib/PetitioRequest";
 import { Readable } from "stream";
 import qs from "querystring";
 
-describe("PetitioRequest", () => {
-	describe("Query Params", () => {
-		const QS = [
-			["test", "test1"],
-			["test1", "test"]
-		];
-		const OQS = Object.fromEntries(QS);
+function url(host = "localhost:8080", method = "http") {
+	return `${method}://${host}`;
+}
 
-		test("CHECK THAT passed query params MATCH RECIEVED query params object", async () => {
-			expect.assertions(1);
+describe("Constructor", () => {
+	test("GIVEN invalid protocol THEN THROW", () => {
+		expect.assertions(2);
 
-			const URL = "https://postman-echo.com/get";
+		function func() {
+			return new PetitioRequest(url("localhost:8080", "wss"));
+		}
 
-			const request = new PetitioRequest(URL);
-			const response = await request
-				.query("test", "test1")
-				.query("test1", "test")
-				.json() as { args: Record<string, string> };
-
-			expect(response.args).toEqual(OQS);
-		});
-
-		test("CHECK THAT passed query params OBJECT MATCH RECIEVED query params object", async () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL);
-			const response = await request
-				.query(OQS)
-				.json() as { args: Record<string, string> };
-
-			expect(response.args).toEqual(OQS);
-		});
+		expect(func).toThrow("Bad URL protocol: wss:");
+		expect(func).toThrow(Error);
 	});
 
-	describe("Body", () => {
-		const body = { hi: "hello" };
-		const text = "hi";
+	test("GIVEN passed url string THEN use native url", () => {
+		expect.assertions(2);
 
-		const bodyString = JSON.stringify(body);
-		const bodyString2 = qs.stringify(body);
-		const bodyBuffer = Buffer.from(bodyString);
+		const reqOne = new PetitioRequest(new NURL(url()));
+		const reqTwo = new PetitioRequest(url());
 
-		// eslint-disable-next-line
-		const bodyStream = Readable.from(text, {objectMode: false});
-
-		test("CHECK THAT passed body MATCH RECIEVED stringified body", () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL);
-			const response = request
-				.body(body);
-
-			expect(response.data).toEqual(bodyString);
-		});
-
-		test("CHECK THAT passed body MATCH RECIEVED stringified body", () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL);
-			const response = request
-				.body(body, "json");
-
-			expect(response.data).toEqual(bodyString);
-		});
-
-		test("CHECK THAT passed stream MATCH RECIEVED passed body", () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL)
-				.body(bodyStream, "stream");
-
-			expect(request.data).toEqual(bodyStream);
-		});
-
-		test("CHECK THAT passed form MATCH RECIEVED form body", () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL)
-				.body(bodyString2, "form");
-
-			expect(request.reqHeaders["content-type"]).toEqual("application/x-www-form-urlencoded");
-		});
-
-		test("CHECK THAT buffer MATCH RECIEVED buffer", () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL)
-				.body(bodyBuffer);
-
-			expect(request.reqHeaders["content-length"]).toEqual(Buffer.byteLength(bodyBuffer).toString());
-		});
+		expect(reqOne.url instanceof NURL).toEqual(true);
+		expect(reqTwo.url instanceof NURL).toEqual(true);
 	});
+});
 
-	describe("Headers", () => {
-		const h1 = { hi: "hello" };
-		const h2 = Object.entries(h1)[0];
+describe("Abort Controller", () => {
+	test("GIVEN passed controller THEN use controller", () => {
+		expect.assertions(1);
 
-		test("CHECK THAT passed headers object MATCH RECIEVED reqHeaders object", () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL);
-			const response = request
-				.header(h1);
-
-			expect(response.reqHeaders).toEqual(h1);
-		});
-
-		test("CHECK THAT passed headers MATCH RECIEVED reqHeaders object", () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL);
-			const response = request
-				.header(h2[0], h2[1]);
-
-			expect(response.reqHeaders).toEqual(h1);
-		});
-	});
-	describe("CLIENT", () => {
-		const client = new Client("https://helper.wtf");
-		const keepClient = true;
-		test("CHECK THAT persistent client MATCHED SENT client", () => {
-			const req = new PetitioRequest("https://helper.wtf")
-				.client(client);
-
-			expect(req.kClient).toEqual(client);
-		});
-
-		test("CHECK THAT keep alive MATCHED SENT keepalive", () => {
-			const req = new PetitioRequest("https://helper.wtf")
-				.client(client, keepClient);
-
-			expect(req.keepClient).toEqual(keepClient);
-		});
-	});
-	describe("PATH", () => {
-		const path = "hi";
-		test("CHECK THAT path MATCHED SENT path", () => {
-			const req = new PetitioRequest("https://helper.wtf")
-				.path(path);
-
-			expect(req.url.pathname).toEqual(`/${path}`);
-		});
-	});
-	describe("METHOD", () => {
-		const method = "POST";
-		test("CHECK THAT post MATCHED SENT post", () => {
-			const req = new PetitioRequest("https://helper.wtf")
-				.method(method);
-
-			expect(req.httpMethod).toEqual(method);
-		});
-	});
-	describe("TIMEOUT", () => {
-		const timeout = 1000;
-		const key = "bodyTimeout";
-		test("CHECK THAT timeout MATCHED SENT timeout", () => {
-			const req = new PetitioRequest("https://helper.wtf")
-				.timeout(timeout);
-
-			expect(req.timeoutOptions.bodyTimeout).toEqual(timeout);
-		});
-		test("CHECK THAT timeout k/v MATCHED SENT timeout v", () => {
-			const req = new PetitioRequest("https://helper.wtf")
-				.timeout(key, timeout);
-
-			expect(req.timeoutOptions.bodyTimeout).toEqual(timeout);
-		});
-	});
-	describe("OPTION", () => {
-		const key = "pipelining";
-		const val = 10;
-		const options = { "pipelining": val };
-		test("CHECK THAT key/val MATCHED SENT key/val", () => {
-			const req = new PetitioRequest("https://helper.wtf")
-				.option(key, val);
-
-			expect(req.coreOptions[key]).toEqual(val);
-		});
-
-		test("CHECK THAT k/v object MATCHED SENT k/v object", () => {
-			const req = new PetitioRequest("https://helper.wtf")
-				.option(options);
-
-			expect(req.coreOptions[key]).toEqual(val);
-		});
-	});
-	describe("RAW", () => {
-		const obj = { test: "test1", test1: "test" };
-
-		test("CHECK THAT passed json MATCH RECIEVED raw value", async () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL);
-			const response = await request
-				.query("test", "test1")
-				.query("test1", "test")
-				.raw();
-			const json = JSON.parse(response.toString());
-			expect(json.args).toEqual(obj);
-		});
-	});
-
-	describe("TEXT", () => {
-		const obj = { test: "test1", test1: "test" };
-
-		test("CHECK THAT passed json MATCH RECIEVED text", async () => {
-			expect.assertions(1);
-
-			const URL = "https://postman-echo.com/get";
-
-			const request = new PetitioRequest(URL);
-			const response = await request
-				.query("test", "test1")
-				.query("test1", "test")
-				.text();
-			const json = JSON.parse(response);
-			expect(json.args).toEqual(obj);
-		});
-	});
-
-	describe("CONSTRUCTOR", () => {
-		test("CHECK THAT passed url DIDNT MATCH ALLOWED protocols", () => {
-			const URL = "wss://gateway.discord.gg";
-
-			// eslint-disable-next-line func-style
-			const func = () => {
-				const request = new PetitioRequest(URL);
-			};
-
-			expect(func).toThrow("Bad URL protocol: wss:");
-			expect(func).toThrow(Error);
-		});
-		test("CHECK THAT passed url DIDNT MATCH ALLOWED protocols", () => {
-			const URL = new NURL("https://helper.wtf");
-
-			const request = new PetitioRequest(URL);
-			expect(request.url instanceof NURL).toBeTruthy();
-		});
-	});
-
-	describe("SEND", () => {
-		test("IF existing client THEN use existing", async () => {
-			const client = new Client("https://helper.wtf");
-			const spy = jest.spyOn(client, "dispatch");
-			const URL = new NURL("https://helper.wtf");
-			const request = await new PetitioRequest(URL)
-				.client(client)
-				.send();
-			expect(spy).toHaveBeenCalledTimes(1);
-		});
-		test("IF invalid THEN rejects", () => {
-			expect.assertions(1);
-			const URL = new NURL("https://nothing.nowhere");
-
-			return expect(new PetitioRequest(URL).send()).rejects.toThrow();
-		});
-	});
-
-	describe("SIGNAL", () => {
 		const controller = new AbortController();
-		test("CHECK THAT passed controller MATCH controller", () => {
-			expect.assertions(1);
 
-			const URL = "https://postman-echo.com/get";
+		const request = new PetitioRequest(url()).signal(controller);
 
-			const request = new PetitioRequest(URL).signal(controller);
+		expect(request.controller).toEqual(controller);
+	});
+});
 
-			expect(request.controller).toEqual(controller);
-		});
+describe("Undici Options", () => {
+	const key = "pipelining";
+	const val = 10;
+	const options = { "pipelining": val };
+
+	test("GIVEN undici option parameters THEN set options", () => {
+		expect.assertions(1);
+
+		const req = new PetitioRequest(url()).option(key, val);
+		expect(req.coreOptions[key]).toEqual(val);
+	});
+
+	test("GIVEN undici options object THEN set options", () => {
+		expect.assertions(1);
+
+		const req = new PetitioRequest(url()).option(options);
+		expect(req.coreOptions[key]).toEqual(val);
+	});
+});
+
+describe("Undici Client", () => {
+	const client = new Client(url());
+
+	test("GIVEN passed client THEN set client", () => {
+		const req = new PetitioRequest(url()).client(client);
+
+		expect(req.kClient).toEqual(client);
+	});
+
+	test("IF keepalive passed THEN set client persistence", () => {
+		expect.assertions(1);
+
+		const req = new PetitioRequest(url()).client(client, true);
+
+		expect(req.keepClient).toEqual(true);
+	});
+});
+
+describe("Request Body", () => {
+	const body = { hi: "hello" };
+	const text = "hi";
+	const bodyString = JSON.stringify(body);
+	const bodyBuffer = Buffer.from(bodyString);
+	const bodyStream = Readable.from(text, {objectMode: false});
+
+	test("GIVEN passed body string THEN set body / headers", () => {
+		expect.assertions(3);
+
+		const req = new PetitioRequest(url()).body(body);
+
+		expect(req.data).toEqual(bodyString);
+		expect(req.reqHeaders["content-type"]).toEqual("application/json");
+		expect(req.reqHeaders["content-length"]).toEqual(Buffer.byteLength(bodyString).toString());
+	});
+
+	test("GIVEN passed explicit json body THEN set body / headers", () => {
+		expect.assertions(3);
+
+		const req = new PetitioRequest(url()).body(body, "json");
+
+		expect(req.data).toEqual(bodyString);
+		expect(req.reqHeaders["content-type"]).toEqual("application/json");
+		expect(req.reqHeaders["content-length"]).toEqual(Buffer.byteLength(bodyString).toString());
+	});
+
+	test("GIVEN passed stream body THEN set body", () => {
+		expect.assertions(3);
+
+		const req = new PetitioRequest(url()).body(bodyStream, "stream");
+
+		expect(req.data).toEqual(bodyStream);
+		expect(req.reqHeaders["content-type"]).toBeUndefined();
+		expect(req.reqHeaders["content-length"]).toBeUndefined();
+	});
+
+	test("GIVEN passed form body THEN set body / headers", () => {
+		expect.assertions(3);
+
+		const query = qs.stringify(body);
+		const req = new PetitioRequest(url()).body(body, "form");
+
+		expect(req.data).toEqual(query);
+		expect(req.reqHeaders["content-type"]).toEqual("application/x-www-form-urlencoded");
+		expect(req.reqHeaders["content-length"]).toEqual(Buffer.byteLength(query).toString());
+	});
+
+	test("GIVEN passed buffer body THEN set body / headers", () => {
+		expect.assertions(3);
+
+		const req = new PetitioRequest(url()).body(bodyBuffer);
+
+		expect(req.data).toEqual(bodyBuffer);
+		expect(req.reqHeaders["content-type"]).toBeUndefined();
+		expect(req.reqHeaders["content-length"]).toEqual(Buffer.byteLength(bodyBuffer).toString());
+	});
+});
+
+describe("Query Parameters", () => {
+	const QS = [
+		["test", "test1"],
+		["test1", "test"]
+	];
+	const OQS = Object.fromEntries(QS);
+
+	test("GIVEN query param pair THEN transmit query", async () => {
+		expect.assertions(1);
+
+		const request = new PetitioRequest(url("localhost:8080/get-echo"));
+		const response = await request
+			.query("test", "test1")
+			.query("test1", "test")
+			.json<{ args: Record<string, string> }>();
+
+		expect(response.args).toEqual(OQS);
+	});
+
+	test("GIVEN query params object THEN transmit query", async () => {
+		expect.assertions(1);
+
+		const request = new PetitioRequest(url("localhost:8080/get-echo"));
+		const response = await request
+			.query(OQS)
+			.json<{ args: Record<string, string> }>();
+
+		expect(response.args).toEqual(OQS);
+	});
+});
+
+describe("Request Headers", () => {
+	const h1 = { hi: "hello" };
+	const h2 = Object.entries(h1)[0];
+
+	test("GIVEN headers object THEN set headers", () => {
+		expect.assertions(1);
+
+		const request = new PetitioRequest(url()).header(h1);
+
+		expect(request.reqHeaders).toEqual(h1);
+	});
+
+	test("GIVEN header pair THEN set headers", () => {
+		expect.assertions(1);
+
+		const request = new PetitioRequest(url()).header(h2[0], h2[1]);
+
+		expect(request.reqHeaders).toEqual(h1);
+	});
+});
+
+
+describe("URL", () => {
+	test("GIVEN method path THEN set path", () => {
+		expect.assertions(1);
+
+		const path = "test";
+		const req = new PetitioRequest(url())
+			.path(path);
+
+		expect(req.url.pathname).toEqual(`/${path}`);
+	});
+
+	test("GIVEN constructor path THEN set path", () => {
+		expect.assertions(1);
+
+		const path = "test";
+		const req = new PetitioRequest(url(`localhost:8080/${path}`));
+
+		expect(req.url.pathname).toEqual(`/${path}`);
+	});
+
+	test("GIVEN method THEN set method", () => {
+		expect.assertions(18);
+
+		const methods: HTTPMethod[] = [
+			"GET",
+			"HEAD",
+			"POST",
+			"OPTIONS",
+			"PUT",
+			"DELETE",
+			"TRACE",
+			"CONNECT",
+			"PATCH"
+		];
+		for (const method of methods) {
+			const reqOne = new PetitioRequest(url()).method(method);
+			const reqTwo = new PetitioRequest(url(), method);
+
+			expect(reqOne.httpMethod).toEqual(method);
+			expect(reqTwo.httpMethod).toEqual(method);
+		}
+	});
+});
+
+describe("Timeout", () => {
+	const timeout = 1000;
+
+	test("GIVEN timeout AND no method THEN use body timeout", () => {
+		expect.assertions(1);
+
+		const req = new PetitioRequest(url())
+			.timeout(timeout);
+
+		expect(req.timeoutOptions.bodyTimeout).toEqual(timeout);
+	});
+
+	test("GIVEN timeout AND method THEN use timeout pair", () => {
+		expect.assertions(3);
+
+		const timeouts: Array<keyof TimeoutOptions> = [
+			"bodyTimeout",
+			"headersTimeout",
+			"keepAliveTimeout"
+		];
+
+		for (const timeoutKey of timeouts) {
+			const req = new PetitioRequest(url()).timeout(timeoutKey, timeout);
+
+			expect(req.timeoutOptions[timeoutKey]).toEqual(timeout);
+		}
+	});
+});
+
+describe("Sending", () => {
+	const obj = { test: "test1", test1: "test" };
+
+	test("GIVEN passed json THEN MATCH received raw", async () => {
+		expect.assertions(1);
+
+		const response = await new PetitioRequest(url("localhost:8080/get-echo"))
+			.query("test", "test1")
+			.query("test1", "test")
+			.raw();
+		const json = JSON.parse(response.toString());
+		expect(json.args).toEqual(obj);
+	});
+
+	test("GIVEN passed json THEN MATCH received text", async () => {
+		expect.assertions(1);
+
+		const response = await new PetitioRequest("http://localhost:8080/get-echo")
+			.query("test", "test1")
+			.query("test1", "test")
+			.text();
+
+		const json = JSON.parse(response);
+		expect(json.args).toEqual(obj);
+	});
+
+	test("GIVEN passed json THEN MATCH received text", async () => {
+		expect.assertions(1);
+
+		const res = await new PetitioRequest("http://localhost:8080/get-echo")
+			.query("test", "test1")
+			.query("test1", "test")
+			.json();
+
+		expect(res.args).toEqual(obj);
+	});
+
+	test("IF existing client THEN use existing", async () => {
+		expect.assertions(1);
+
+		const client = new Client(url());
+		const spy = jest.spyOn(client, "dispatch");
+
+		await new PetitioRequest(url())
+			.client(client)
+			.send();
+
+		expect(spy).toHaveBeenCalledTimes(1);
+	});
+
+	test("IF invalid THEN THROW", () => {
+		expect.assertions(1);
+		const URL = new NURL("http://nothing.nowhere");
+
+		return expect(new PetitioRequest(URL).send()).rejects.toThrow();
 	});
 });
