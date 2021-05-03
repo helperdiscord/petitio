@@ -1,4 +1,4 @@
-petitio - base x 7,496 ops/sec ±4.70% (265 runs sampled)
+petitio - base x 11,765 ops/sec ±4.21% (284 runs sampled)
 
-petitio - large body x 183 ops/sec ±1.91% (255 runs sampled)
+petitio - large body x 334 ops/sec ±1.60% (270 runs sampled)
 
