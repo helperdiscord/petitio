@@ -16,7 +16,8 @@
 		{
 			"files": ["tests/**/*.ts"],
 			"rules": {
-				"max-lines-per-function": 0
+				"max-lines-per-function": 0,
+				"no-duplicate-imports": 0
 			}
 		}
 	]

@@ -1,80 +1,60 @@
-import { URL as NURL } from "url";
 import { PetitioRequest } from "../src/lib/PetitioRequest";
 import { PetitioResponse } from "../src/lib/PetitioResponse";
 
-describe("PetitioResponse", () => {
-	describe("JSON", () => {
-		test("GET JSON data FROM https://jsonplaceholder.typicode.com/posts/1 STRING", async () => {
-			expect.assertions(1);
-			const URL = "https://jsonplaceholder.typicode.com/posts/1";
-			const RESPONSE = {
-				userId: 1,
-				id: 1,
-				title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-				// eslint-disable-next-line max-len
-				body: "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-			};
+function url(host = "localhost:8080", method = "http") {
+	return `${method}://${host}`;
+}
 
-			const request = new PetitioRequest(URL);
-			const response = await request.json();
+describe("Response Parsing", () => {
+	test("GIVEN json from request THEN parse", async () => {
+		expect.assertions(1);
 
-			expect(response).toEqual(RESPONSE);
-		});
+		const json = {
+			id: 0,
+			title: "in collaboration we trust",
+			body: "melius simul quam solus"
+		};
+		const request = new PetitioRequest(url("localhost:8080/json-test"));
+		const response = await request.json();
 
-		test("GET JSON data FROM https://jsonplaceholder.typicode.com/posts/1 URL", async () => {
-			expect.assertions(1);
-			const URL = new NURL("https://jsonplaceholder.typicode.com/posts/1");
-			const RESPONSE = {
-				userId: 1,
-				id: 1,
-				title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-				// eslint-disable-next-line max-len
-				body: "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-			};
-
-			const request = new PetitioRequest(URL);
-			const response = await request.json();
-
-			expect(response).toEqual(RESPONSE);
-		});
+		expect(response).toEqual(json);
 	});
-	describe("Building Response", () => {
+});
+
+describe("Response Formats", () => {
+	const text = "hi";
+	const buffer = Buffer.from(text);
+	const encoded = buffer.toString("base64");
+
+	test("GIVEN buffer THEN parse json", () => {
+		expect.assertions(1);
+
 		const data = { hi: "hello" };
-		const buffer = Buffer.from(JSON.stringify(data));
+		const buf = Buffer.from(JSON.stringify(data));
+		const res = new PetitioResponse();
+		res._addBody([buf]);
+		const final = res.json();
 
-		test("ADDING BUFFER TO RESPONSE", () => {
-			const res = new PetitioResponse();
-			res._addBody([buffer]);
-
-			const final = res.json();
-
-			expect(final).toEqual(data);
-		});
-	});
-	describe("TEXT", () => {
-		const text = "hi";
-		const buffer = Buffer.from(text);
-		test("TEXT", () => {
-			const res = new PetitioResponse();
-			res._addBody([buffer]);
-
-			const final = res.text();
-
-			expect(final).toEqual(text);
-		});
+		expect(final).toEqual(data);
 	});
 
-	describe("TEXT WITH ENCODING", () => {
-		const text = "hi";
-		const buffer = Buffer.from(text);
-		const encoded = buffer.toString("base64");
-		test("BASE64", () => {
-			const res = new PetitioResponse();
-			res._addBody([buffer]);
+	test("GIVEN buffer THEN parse text", () => {
+		expect.assertions(1);
 
-			const final = res.text("base64");
+		const res = new PetitioResponse();
+		res._addBody([buffer]);
+		const final = res.text();
 
-			expect(final).toEqual(encoded);
-		});
+		expect(final).toEqual(text);
+	});
+
+	test("GIVEN buffer THEN parse encoded text", () => {
+		expect.assertions(1);
+
+		const res = new PetitioResponse();
+		res._addBody([buffer]);
+		const final = res.text("base64");
+
+		expect(final).toEqual(encoded);
 	});
 });
