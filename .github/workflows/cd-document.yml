@@ -2,10 +2,10 @@ name: "CD: Document"
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
   release:
     types: [created]
 jobs:

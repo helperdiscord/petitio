@@ -2,7 +2,7 @@ name: "CD: Release"
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   release:
     name: Release
