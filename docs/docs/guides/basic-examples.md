@@ -1,3 +1,8 @@
+---
+id: "basic-examples"
+title: "Basic Examples"
+---
+
 # Examples
 
 ### Basic GET Request

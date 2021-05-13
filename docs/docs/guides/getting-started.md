@@ -34,8 +34,8 @@ a buffer to a string. The shorthand form of this is
 [PetitioRequest#text][request-text], which sends the request and invokes text
 parsing for you in one call.
 
-That's the basics covered! Check out some more [usage examples], or read
-through our [other guides].
+That's the basics covered! Feel free to read through our [other
+guides], or take a look at more [basic examples].
 
 [default export]: ../pkg/modules/petitio#export
 [PetitioRequest]: ../pkg/classes/petitiorequest.petitiorequest-1
@@ -43,5 +43,5 @@ through our [other guides].
 [send]: ../pkg/classes/petitiorequest.petitiorequest-1#send
 [response-text]: ../pkg/classes/petitioresponse.petitioresponse-1#text
 [request-text]: ../pkg/classes/petitiorequest.petitiorequest-1#text
-[usage examples]: https://github.com/helperdiscord/petitio/tree/master/USAGE.md
 [other guides]: ../
+[basic examples]: ./basic-examples
