@@ -190,7 +190,17 @@ export declare class PetitioRequest {
     text(): Promise<string>;
     /**
      * Finalizes and sends the composable request to the target server.
-     * @return {*} The response object.
+     * @return {@link PetitioRequest} The response object.
+     * @throws {@link RequestAbortedError} Thrown when the request is aborted via
+     * the abort controller.
+     * @throws {@link ClientDestroyedError} Thrown when you attempt to use an
+     * already destroyed Undici client to make another request.
+     * @throws {@link ClientClosedError} Thrown when you attempt to use an
+     * already closed Undici client to make another request.
+     * @throws {@link HeadersTimeoutError} Thrown when request headers were not
+     * received before the timeout expired.
+     * @throws {@link BodyTimeoutError} Thrown when the request body was not
+     * received before the timeout expired.
      */
     send(): Promise<PetitioResponse>;
 }
