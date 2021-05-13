@@ -1,6 +1,6 @@
 {
 	"name": "petitio",
-	"version": "1.3.1",
+	"version": "1.3.2",
 	"description": "Zero-dependency HTTP library designed to be simple, fast, and type-strong.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
