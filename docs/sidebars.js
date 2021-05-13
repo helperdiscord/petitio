@@ -5,7 +5,8 @@ module.exports = {
 			type: "category",
 			label: "Guides",
 			items: [
-				"guides/getting-started"
+				"guides/getting-started",
+				"guides/basic-examples"
 			]
 		},
 		{
