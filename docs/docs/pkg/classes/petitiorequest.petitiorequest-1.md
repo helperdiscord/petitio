@@ -27,9 +27,20 @@ Name | Type | Default value | Description |
 
 The Petitio request instance for your URL.
 
-Defined in: [lib/PetitioRequest.ts:66](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L66)
+Defined in: [lib/PetitioRequest.ts:72](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L72)
 
 ## Properties
+
+### controller
+
+• `Optional` **controller**: *default*
+
+The AbortController attached to the request
+enableable with [PetitioRequest.signal](petitiorequest.petitiorequest-1.md#signal)
+
+Defined in: [lib/PetitioRequest.ts:72](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L72)
+
+___
 
 ### coreOptions
 
@@ -39,7 +50,7 @@ Options to use for Undici under the hood.
 
 **`see`** [Undici ClientOptions documentation](https://github.com/nodejs/undici/blob/main/docs/api/Client.md#parameter-clientoptions)
 
-Defined in: [lib/PetitioRequest.ts:34](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L34)
+Defined in: [lib/PetitioRequest.ts:35](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L35)
 
 ___
 
@@ -51,7 +62,7 @@ The data to be sent as the request body.
 This will be a buffer or string for normal requests, or a stream.Readable
 if the request is to be sent as a stream.
 
-Defined in: [lib/PetitioRequest.ts:40](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L40)
+Defined in: [lib/PetitioRequest.ts:41](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L41)
 
 ___
 
@@ -61,7 +72,7 @@ ___
 
 **`see`** [HTTPMethod](../modules/petitiorequest.md#httpmethod)
 
-Defined in: [lib/PetitioRequest.ts:44](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L44)
+Defined in: [lib/PetitioRequest.ts:45](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L45)
 
 ___
 
@@ -71,7 +82,7 @@ ___
 
 **`see`** [PetitioRequest.client](petitiorequest.petitiorequest-1.md#client)
 
-Defined in: [lib/PetitioRequest.ts:48](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L48)
+Defined in: [lib/PetitioRequest.ts:49](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L49)
 
 ___
 
@@ -82,7 +93,7 @@ ___
 Whether [PetitioRequest.kClient](petitiorequest.petitiorequest-1.md#kclient) will persist between [PetitioRequest.send](petitiorequest.petitiorequest-1.md#send)
 calls. It is recommended to enable this for superior performance.
 
-Defined in: [lib/PetitioRequest.ts:53](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L53)
+Defined in: [lib/PetitioRequest.ts:54](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L54)
 
 ___
 
@@ -92,7 +103,7 @@ ___
 
 The headers to attach to the request.
 
-Defined in: [lib/PetitioRequest.ts:57](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L57)
+Defined in: [lib/PetitioRequest.ts:58](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L58)
 
 ___
 
@@ -104,7 +115,7 @@ The timeout options for the Undici client.
 
 **`see`** [TimeoutOptions](../interfaces/petitiorequest.timeoutoptions.md)
 
-Defined in: [lib/PetitioRequest.ts:62](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L62)
+Defined in: [lib/PetitioRequest.ts:63](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L63)
 
 ___
 
@@ -114,7 +125,7 @@ ___
 
 The URL destination for the request, targeted in [PetitioRequest.send](petitiorequest.petitiorequest-1.md#send).
 
-Defined in: [lib/PetitioRequest.ts:66](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L66)
+Defined in: [lib/PetitioRequest.ts:67](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L67)
 
 ## Methods
 
@@ -130,7 +141,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:129](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L129)
+Defined in: [lib/PetitioRequest.ts:156](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L156)
 
 ▸ **body**(`data`: *Record*<string, any\>, `sendAs?`: *json*): [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
@@ -143,7 +154,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:137](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L137)
+Defined in: [lib/PetitioRequest.ts:164](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L164)
 
 ▸ **body**(`data`: *string* \| *ParsedUrlQueryInput*, `sendAs`: *form*): [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
@@ -156,7 +167,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:145](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L145)
+Defined in: [lib/PetitioRequest.ts:172](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L172)
 
 ▸ **body**(`data`: *Readable*, `sendAs`: *stream*): [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
@@ -169,7 +180,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:152](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L152)
+Defined in: [lib/PetitioRequest.ts:179](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L179)
 
 ___
 
@@ -190,7 +201,7 @@ Name | Type | Description |
 
 The request object for further composition.
 
-Defined in: [lib/PetitioRequest.ts:85](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L85)
+Defined in: [lib/PetitioRequest.ts:91](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L91)
 
 ___
 
@@ -207,7 +218,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:196](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L196)
+Defined in: [lib/PetitioRequest.ts:223](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L223)
 
 ▸ **header**(`header`: *Record*<string, string\>): [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
@@ -219,7 +230,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:200](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L200)
+Defined in: [lib/PetitioRequest.ts:227](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L227)
 
 ___
 
@@ -237,7 +248,7 @@ Name | Default | Description |
 
 A serialized object result from sending the request.
 
-Defined in: [lib/PetitioRequest.ts:262](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L262)
+Defined in: [lib/PetitioRequest.ts:295](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L295)
 
 ___
 
@@ -255,7 +266,7 @@ Name | Type | Description |
 
 The request object for further composition.
 
-Defined in: [lib/PetitioRequest.ts:214](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L214)
+Defined in: [lib/PetitioRequest.ts:247](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L247)
 
 ___
 
@@ -273,7 +284,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:243](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L243)
+Defined in: [lib/PetitioRequest.ts:276](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L276)
 
 ▸ **option**<T\>(`key`: T, `value`: Options[T]): [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
@@ -294,7 +305,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:250](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L250)
+Defined in: [lib/PetitioRequest.ts:283](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L283)
 
 ___
 
@@ -315,7 +326,7 @@ Name | Type | Description |
 
 The request object for further composition.
 
-Defined in: [lib/PetitioRequest.ts:120](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L120)
+Defined in: [lib/PetitioRequest.ts:132](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L132)
 
 ___
 
@@ -336,7 +347,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:99](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L99)
+Defined in: [lib/PetitioRequest.ts:105](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L105)
 
 ▸ **query**(`key`: *Record*<string, any\>): [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
@@ -352,7 +363,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:106](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L106)
+Defined in: [lib/PetitioRequest.ts:112](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L112)
 
 ___
 
@@ -364,7 +375,7 @@ ___
 
 The raw response body as a buffer.
 
-Defined in: [lib/PetitioRequest.ts:270](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L270)
+Defined in: [lib/PetitioRequest.ts:303](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L303)
 
 ___
 
@@ -378,7 +389,32 @@ Finalizes and sends the composable request to the target server.
 
 The response object.
 
-Defined in: [lib/PetitioRequest.ts:288](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L288)
+Defined in: [lib/PetitioRequest.ts:321](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L321)
+
+___
+
+### signal
+
+▸ **signal**(`controller`: *default*): [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
+
+**`example`** 
+```ts
+const controller = new AbortController();
+const result = petitio(URL).signal(controller);
+setTimeout(() => controller.abort(), 5000) // serves as a request timeout
+```
+
+#### Parameters:
+
+Name | Type | Description |
+:------ | :------ | :------ |
+`controller` | *default* | A controller instance that handles aborting the request.   |
+
+**Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
+
+The request object for further composition.
+
+Defined in: [lib/PetitioRequest.ts:147](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L147)
 
 ___
 
@@ -390,7 +426,7 @@ ___
 
 The raw response body as a string.
 
-Defined in: [lib/PetitioRequest.ts:278](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L278)
+Defined in: [lib/PetitioRequest.ts:311](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L311)
 
 ___
 
@@ -408,7 +444,7 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:225](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L225)
+Defined in: [lib/PetitioRequest.ts:258](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L258)
 
 ▸ **timeout**(`timeout`: keyof [*TimeoutOptions*](../interfaces/petitiorequest.timeoutoptions.md), `time`: *number*): [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
@@ -423,4 +459,4 @@ Name | Type | Description |
 
 **Returns:** [*PetitioRequest*](petitiorequest.petitiorequest-1.md)
 
-Defined in: [lib/PetitioRequest.ts:231](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioRequest.ts#L231)
+Defined in: [lib/PetitioRequest.ts:264](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioRequest.ts#L264)

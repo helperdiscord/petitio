@@ -1,3 +1,8 @@
+---
+id: "basic-examples"
+title: "Basic Examples"
+---
+
 # Examples
 
 ### Basic GET Request
@@ -19,7 +24,7 @@ const req = require("petitio");
 const res = await req("https://discord.com/api/channels/ID/messages", "POST")
 	.body({ content: "hi" })
 	.header({ "Authorization": "Bot TOKEN" })
-	.json()
+	.json();
 console.log(res);
 
 /* {
@@ -47,8 +52,8 @@ console.log(res);
 ```ts
 import req from "petitio";
 
-type Gateway {
-    url: string
+interface Gateway {
+    url: string;
 }
 
 const res = await req("https://discord.com/api/gateway").json<Gateway>();

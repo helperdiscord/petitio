@@ -25,11 +25,11 @@ hide_title: true
 • **body**: *Buffer*
 
 The response body received from the server.
-This is updated in chunks through [PetitioResponse._addChunk](petitioresponse.petitioresponse-1.md#_addchunk), either
+This is updated through [PetitioResponse._addBody](petitioresponse.petitioresponse-1.md#_addbody), either
 from [PetitioRequest.send](petitiorequest.petitiorequest-1.md#send) or directly on a response object from
 another source.
 
-Defined in: [lib/PetitioResponse.ts:12](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L12)
+Defined in: [lib/PetitioResponse.ts:12](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioResponse.ts#L12)
 
 ___
 
@@ -42,7 +42,7 @@ This is updated through [PetitioResponse._parseHeaders](petitioresponse.petitior
 
 #### Type declaration:
 
-Defined in: [lib/PetitioResponse.ts:17](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L17)
+Defined in: [lib/PetitioResponse.ts:17](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioResponse.ts#L17)
 
 ___
 
@@ -54,29 +54,28 @@ The status code received from the server.
 This is set only after the response is complete when headers are received
 or it can be set manually.
 
-Defined in: [lib/PetitioResponse.ts:23](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L23)
+Defined in: [lib/PetitioResponse.ts:23](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioResponse.ts#L23)
 
 ## Methods
 
-### \_addChunk
+### \_addBody
 
-▸ **_addChunk**(`chunk`: *Buffer* \| *Uint8Array*): *void*
+▸ **_addBody**(`chunks`: *Buffer*[] \| *Uint8Array*[]): *void*
 
-This appends data to the body, dynamically reallocating the buffer size
-as chunks are added. Therefore, this is currently unsuitable for handling
-large responses, as the exact size is allocated in memory as a buffer.
+This takes the data chunks and creates a Buffer, and it sets
+that buffer as the body.
 
 #### Parameters:
 
 Name | Type | Description |
 :------ | :------ | :------ |
-`chunk` | *Buffer* \| *Uint8Array* | The chunk of data to append to the body.   |
+`chunks` | *Buffer*[] \| *Uint8Array*[] | The body to set for the response.   |
 
 **Returns:** *void*
 
 In place operation with no return.
 
-Defined in: [lib/PetitioResponse.ts:32](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L32)
+Defined in: [lib/PetitioResponse.ts:31](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioResponse.ts#L31)
 
 ___
 
@@ -94,7 +93,7 @@ Name | Type | Description |
 
 In place operation with no return.
 
-Defined in: [lib/PetitioResponse.ts:43](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L43)
+Defined in: [lib/PetitioResponse.ts:43](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioResponse.ts#L43)
 
 ___
 
@@ -118,7 +117,7 @@ Name | Type | Default value |
 
 A serialized object result parsed from the response body.
 
-Defined in: [lib/PetitioResponse.ts:62](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L62)
+Defined in: [lib/PetitioResponse.ts:62](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioResponse.ts#L62)
 
 ___
 
@@ -136,4 +135,4 @@ Name | Type | Default value |
 
 The response body decoded as as a string from the buffer, using either the encoding specified in `encoding` or UTF-8 by default..
 
-Defined in: [lib/PetitioResponse.ts:70](https://github.com/helperdiscord/petitio/blob/4e06ad6/src/lib/PetitioResponse.ts#L70)
+Defined in: [lib/PetitioResponse.ts:70](https://github.com/helperdiscord/petitio/blob/23c8120/src/lib/PetitioResponse.ts#L70)
