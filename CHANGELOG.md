@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/helperdiscord/petitio/compare/v1.3.1...v1.3.2) (2021-05-13)
+
+
+### Bug Fixes
+
+* master -> main [ci_release] ([a0dafd6](https://github.com/helperdiscord/petitio/commit/a0dafd656349e6df692208e28033afcc837da77e))
+
 ## [1.3.1](https://github.com/helperdiscord/petitio/compare/v1.3.0...v1.3.1) (2021-04-21)
 
 
