@@ -10,6 +10,9 @@ import { URL } from "url";
  * @return {PetitioRequest} The Petitio request instance for your URL.
  * @see [[PetitioRequest.constructor]]
  */
-export = function petitio(url: URL | string, method: HTTPMethod = "GET") {
+// @ts-ignore Typescript is wrong
+export = function petitio(url: URL | string, method: HTTPMethod = "GET"): PetitioRequest {
 	return new PetitioRequest(url, method);
 }
+
+export { HTTPMethod };
