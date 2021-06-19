@@ -1,8 +1,10 @@
 /**
  * @module Petitio
  */
-import { HTTPMethod, PetitioRequest } from "./lib/PetitioRequest";
-import { URL } from "url";
+import type { HTTPMethod } from "./lib/PetitioRequest";
+// eslint-disable-next-line no-duplicate-imports
+import { PetitioRequest } from "./lib/PetitioRequest";
+import type { URL } from "url";
 
 /**
  * @param {(string | URL)} url The URL to start composing a request for.

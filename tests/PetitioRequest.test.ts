@@ -1,6 +1,7 @@
+// eslint-disable-next-line node/no-extraneous-import
+import { Agent, Client } from "undici";
 import type { HTTPMethod, TimeoutOptions } from "../src/lib/PetitioRequest";
 import AbortController from "node-abort-controller";
-import { Client } from "undici";
 import { URL as NURL } from "url";
 import { PetitioRequest } from "../src/lib/PetitioRequest";
 import { Readable } from "stream";
@@ -65,21 +66,39 @@ describe("Undici Options", () => {
 	});
 });
 
+describe("Undici Agent", () => {
+	const client = new Agent({});
+
+	test("GIVEN passed agent THEN set agent", () => {
+		const req = new PetitioRequest(url()).dispatch(client);
+
+		expect(req.kDispatch).toEqual(client);
+	});
+
+	test("IF keepalive passed THEN set agent persistence", () => {
+		expect.assertions(1);
+
+		const req = new PetitioRequest(url()).dispatch(client, true);
+
+		expect(req.keepDispatcher).toEqual(true);
+	});
+});
+
 describe("Undici Client", () => {
 	const client = new Client(url());
 
 	test("GIVEN passed client THEN set client", () => {
-		const req = new PetitioRequest(url()).client(client);
+		const req = new PetitioRequest(url()).dispatch(client);
 
-		expect(req.kClient).toEqual(client);
+		expect(req.kDispatch).toEqual(client);
 	});
 
 	test("IF keepalive passed THEN set client persistence", () => {
 		expect.assertions(1);
 
-		const req = new PetitioRequest(url()).client(client, true);
+		const req = new PetitioRequest(url()).dispatch(client, true);
 
-		expect(req.keepClient).toEqual(true);
+		expect(req.keepDispatcher).toEqual(true);
 	});
 });
 
@@ -132,13 +151,12 @@ describe("Request Body", () => {
 	});
 
 	test("GIVEN passed buffer body THEN set body / headers", () => {
-		expect.assertions(3);
+		expect.assertions(2);
 
 		const req = new PetitioRequest(url()).body(bodyBuffer);
 
 		expect(req.data).toEqual(bodyBuffer);
 		expect(req.reqHeaders["content-type"]).toBeUndefined();
-		expect(req.reqHeaders["content-length"]).toEqual(Buffer.byteLength(bodyBuffer).toString());
 	});
 });
 
@@ -308,11 +326,11 @@ describe("Sending", () => {
 	test("IF existing client THEN use existing", async () => {
 		expect.assertions(1);
 
-		const client = new Client(url());
+		const client = new Agent({});
 		const spy = jest.spyOn(client, "dispatch");
 
 		await new PetitioRequest(url())
-			.client(client)
+			.dispatch(client)
 			.send();
 
 		expect(spy).toHaveBeenCalledTimes(1);

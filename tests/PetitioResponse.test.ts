@@ -48,6 +48,16 @@ describe("Response Formats", () => {
 		expect(final).toEqual(text);
 	});
 
+	test("GIVEN buffer THEN parse buffer", () => {
+		expect.assertions(1);
+
+		const res = new PetitioResponse();
+		res._addBody([buffer]);
+		const final = res.raw();
+
+		expect(final).toEqual(buffer);
+	});
+
 	test("GIVEN buffer THEN parse encoded text", () => {
 		expect.assertions(1);
 

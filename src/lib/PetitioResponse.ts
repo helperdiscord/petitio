@@ -1,7 +1,6 @@
 /**
  * @module PetitioResponse
  */
-
 export class PetitioResponse {
 	/**
 	 * The response body received from the server.
@@ -29,8 +28,8 @@ export class PetitioResponse {
 	 * @return {*} In place operation with no return.
 	 */
 	public _addBody(chunks: Buffer[] | Uint8Array[]) {
-		const length = this.headers["content-length"];
-		this.body = Buffer.concat(chunks, length ? Number(length) : undefined);
+		const length = Number(this.headers["content-length"]) || undefined;
+		this.body = Buffer.concat(chunks, length);
 	}
 
 	/**
@@ -40,23 +39,23 @@ export class PetitioResponse {
 	 * as an array if it already exists.
 	 * @return {*} In place operation with no return.
 	 */
-	public _parseHeaders(headers: string[]) {
-		for (let idx = 1; idx < headers.length; idx += 2) {
-			const key = headers[idx - 1].toLowerCase();
-			let val = this.headers[key];
-			if (val) {
-				if (!Array.isArray(val)) {
-					val = [val];
-					this.headers[key] = val;
-				}
-				val.push(headers[idx]);
-			} else this.headers[key] = headers[idx];
+	public _parseHeaders(headers: Buffer[]) {
+		const len = headers.length;
+		for (let idx = 1; idx < len; idx += 2) {
+			const key = headers[idx - 1].toString().toLowerCase();
+			const toA = headers[idx].toString();
+			const val = this.headers[key];
+			// eslint-disable-next-line curly
+			if (val !== undefined) {
+				if (!Array.isArray(val)) this.headers[key] = [val, toA];
+				else val[val.length] = toA;
+			} else this.headers[key] = toA;
 		}
 	}
 
 	/**
 	 * @template T Type casting parameter for the JSON result.
-	 * @param {BufferEncoding} [encoding="utf8"] The encoding to use when parsing the response body.
+	 * @param {*} [encoding="utf8"] The encoding to use when parsing the response body.
 	 * @return {T} A serialized object result parsed from the response body.
 	 */
 	public json<T = any>(encoding: BufferEncoding = "utf8"): T {
@@ -64,10 +63,17 @@ export class PetitioResponse {
 	}
 
 	/**
-	 * @param {BufferEncoding} [encoding="utf8"] The encoding to use.
-	 * @return {string} The response body decoded as as a string from the buffer, using either the encoding specified in `encoding` or UTF-8 by default..
+	 * @param {*} [encoding="utf8"] The encoding to use.
+	 * @return {*} The response body decoded as as a string from the buffer, using either the encoding specified in `encoding` or UTF-8 by default..
 	 */
 	public text(encoding: BufferEncoding = "utf8"): string {
 		return this.body.toString(encoding);
+	}
+
+	/**
+	   * @return {*} The raw response body as a buffer.
+	   */
+	public raw(): Buffer {
+		return this.body;
 	}
 }

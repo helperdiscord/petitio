@@ -1,10 +1,10 @@
-import * as http from "http";
+import { createServer } from "http";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { readFileSync } from "fs";
+import { readFile } from "fs/promises";
 
 // @ts-expect-error: the file is running as a module, import.meta is allowed
-const largeData = readFileSync(`${dirname(fileURLToPath(import.meta.url))}/large.txt`).toString();
+const largeData = (await readFile(`${dirname(fileURLToPath(import.meta.url))}/large.txt`)).toString();
 
 function requestHandler(req, res) {
 	switch (req.url) {
@@ -24,6 +24,5 @@ function requestHandler(req, res) {
 	}
 }
 
-http
-	.createServer(requestHandler)
+createServer(requestHandler)
 	.listen(8080, () => console.log("Awaiting requests."));
