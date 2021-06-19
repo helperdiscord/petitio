@@ -1,13 +1,14 @@
-// eslint-disable-next-line node/no-extraneous-import
+import * as qs from "querystring";
 import { Agent, Client } from "undici";
 import type { HTTPMethod, TimeoutOptions } from "../src/lib/PetitioRequest";
 import AbortController from "node-abort-controller";
 import { URL as NURL } from "url";
 import { PetitioRequest } from "../src/lib/PetitioRequest";
 import { Readable } from "stream";
-import qs from "querystring";
 
-function url(host = "localhost:8080", method = "http") {
+const PORT = 8080 + Number(process.env.JEST_WORKER_ID);
+
+function url(host = `localhost:${PORT}`, method = "http") {
 	return `${method}://${host}`;
 }
 
@@ -16,7 +17,7 @@ describe("Constructor", () => {
 		expect.assertions(2);
 
 		function func() {
-			return new PetitioRequest(url("localhost:8080", "wss"));
+			return new PetitioRequest(url(`localhost:${PORT}`, "wss"));
 		}
 
 		expect(func).toThrow("Bad URL protocol: wss:");
@@ -170,7 +171,7 @@ describe("Query Parameters", () => {
 	test("GIVEN query param pair THEN transmit query", async () => {
 		expect.assertions(1);
 
-		const request = new PetitioRequest(url("localhost:8080/get-echo"));
+		const request = new PetitioRequest(url(`localhost:${PORT}/get-echo`));
 		const response = await request
 			.query("test", "test1")
 			.query("test1", "test")
@@ -182,7 +183,7 @@ describe("Query Parameters", () => {
 	test("GIVEN query params object THEN transmit query", async () => {
 		expect.assertions(1);
 
-		const request = new PetitioRequest(url("localhost:8080/get-echo"));
+		const request = new PetitioRequest(url(`localhost:${PORT}/get-echo`));
 		const response = await request
 			.query(OQS)
 			.json<{ args: Record<string, string> }>();
@@ -228,7 +229,7 @@ describe("URL", () => {
 		expect.assertions(1);
 
 		const path = "test";
-		const req = new PetitioRequest(url(`localhost:8080/${path}`));
+		const req = new PetitioRequest(url(`localhost:${PORT}/${path}`));
 
 		expect(req.url.pathname).toEqual(`/${path}`);
 	});
@@ -292,7 +293,7 @@ describe("Sending", () => {
 	test("GIVEN passed json THEN MATCH received raw", async () => {
 		expect.assertions(1);
 
-		const response = await new PetitioRequest(url("localhost:8080/get-echo"))
+		const response = await new PetitioRequest(url(`localhost:${PORT}/get-echo`))
 			.query("test", "test1")
 			.query("test1", "test")
 			.raw();
@@ -303,7 +304,7 @@ describe("Sending", () => {
 	test("GIVEN passed json THEN MATCH received text", async () => {
 		expect.assertions(1);
 
-		const response = await new PetitioRequest("http://localhost:8080/get-echo")
+		const response = await new PetitioRequest(`http://localhost:${PORT}/get-echo`)
 			.query("test", "test1")
 			.query("test1", "test")
 			.text();
@@ -315,7 +316,7 @@ describe("Sending", () => {
 	test("GIVEN passed json THEN MATCH received text", async () => {
 		expect.assertions(1);
 
-		const res = await new PetitioRequest("http://localhost:8080/get-echo")
+		const res = await new PetitioRequest(`http://localhost:${PORT}/get-echo`)
 			.query("test", "test1")
 			.query("test1", "test")
 			.json();
