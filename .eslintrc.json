@@ -5,19 +5,19 @@
 		"ecmaVersion": 2015
  	},
 	"rules": {
-		"lines-between-class-members": 0,
-		"max-len": [2, {"tabWidth": 4, "code": 120, "ignoreComments": true}],
 		"@typescript-eslint/init-declarations": 0,
-		"no-underscore-dangle": 0,
+		"lines-around-comment": 0,
+		"max-len": [2, {"tabWidth": 4, "code": 120, "ignoreComments": true}],
+		"no-duplicate-imports": 0,
 		"no-extra-parens": 0,
-		"lines-around-comment": 0
+		"no-underscore-dangle": 0,
+		"node/no-missing-import": 0
 	},
 	"overrides": [
 		{
 			"files": ["tests/**/*.ts"],
 			"rules": {
-				"max-lines-per-function": 0,
-				"no-duplicate-imports": 0
+				"max-lines-per-function": 0
 			}
 		}
 	]
