@@ -106,15 +106,15 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {*} key The query key to use for the URL query parameters.
-	 * @param {*} value The value to set the query key to.
+	 * @param {string} key The query key to use for the URL query parameters.
+	 * @param {string} value The value to set the query key to.
 	 * @example
 	 * If you wish to make a query at https://example.com/index?query=parameter
 	 * you can use `.query("query", "parameter")`.
 	 */
 	public query(key: string, value: any): this
 	/**
-	 * @param {*} key An object of query keys and their respective values.
+	 * @param {Record<string, any>} key An object of query keys and their respective values.
 	 * @example
 	 * If you wish to make multiple queries at once, you can use
 	 * `.query({"keyOne": "hello", "keyTwo": "world!"})`.
@@ -136,8 +136,8 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {*} relativePath A path to resolve relative to the current URL.
-	 * @return {*} The request object for further composition.
+	 * @param {string} relativePath A path to resolve relative to the current URL.
+	 * @return {this} The request object for further composition.
 	 * @example `https://example.org/hello/world` with `.path("../petitio")`
 	 * would resolve to `https://example.org/hello/petitio`.
 	 */
@@ -148,8 +148,8 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {*} controller A controller instance that handles aborting the request.
-	 * @return {*} The request object for further composition.
+	 * @param {AbortController | globalThis.AbortController} controller A controller instance that handles aborting the request.
+	 * @return {this} The request object for further composition.
 	 * @example
 	 * ```ts
 	 * const controller = new AbortController();
@@ -164,28 +164,28 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {*} data The data to be set for the request body.
+	 * @param {Buffer | string} data The data to be set for the request body.
 	 */
 	public body(data: Buffer | string): this
 	/**
-	 * @param {*} data The data to be set for the request body.
-	 * @param {*} sendAs If data is set to any object type value other than a
+	 * @param {Record<string, any>} data The data to be set for the request body.
+	 * @param {string = "json"} sendAs If data is set to any object type value other than a
 	 * buffer or this is set to `json`, the `Content-Type` header will be set to
 	 * `application/json` and the request data will be set to the stringified
 	 * JSON form of the supplied data.
 	 */
 	public body(data: Record<string, any>, sendAs?: "json"): this
 	/**
-	 * @param {*} data The data to be set for the request body.
-	 * @param {*} sendAs If data is a string or a parsed object of query
+	 * @param {ParsedUrlQueryInput} data The data to be set for the request body.
+	 * @param {"form"} sendAs If data is a string or a parsed object of query
 	 * parameters *AND* this is set to `form`, the `Content-Type` header will be
 	 * set to `application/x-www-form-urlencoded` and the request data will be
 	 * set to the URL encoded version of the query string.
 	 */
 	public body(data: ParsedUrlQueryInput | string, sendAs: "form"): this
 	/**
-	 * @param {*} data The data to be set for the request body.
-	 * @param {*} sendAs If data is a stream.Readable *AND* this is set to
+	 * @param {Readable} data The data to be set for the request body.
+	 * @param {"stream"} sendAs If data is a stream.Readable *AND* this is set to
 	 * `stream`, the body will be sent as the stream with no modifications to
 	 * it or the headers.
 	 */
@@ -228,12 +228,12 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {*} header The encoded header name to set.
-	 * @param {*} value The value to set the header to.
+	 * @param {string} header The encoded header name to set.
+	 * @param {string} value The value to set the header to.
 	 */
 	public header(header: string, value: string): this
 	/**
-	 * @param {*} header An object of keys and values to set headers to.
+	 * @param {Record<string, string>} header An object of keys and values to set headers to.
 	 */
 	public header(header: Record<string, string>): this
 	public header(header: string | Record<string, string>, value?: string): this {
@@ -252,7 +252,7 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {*} method The HTTP method to change the request to.
+	 * @param {HTTPMethod} method The HTTP method to change the request to.
 	 * @return {*} The request object for further composition.
 	 */
 	public method(method: HTTPMethod): this {
@@ -359,8 +359,8 @@ export class PetitioRequest {
 				onData: (buff: Buffer) => (data[data.length] = buff),
 				onError: (err: Error) => reject(err),
 				onComplete: () => {
-					// eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
-					if (this.keepDispatcher === false) void dispatcher.close();
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare, eqeqeq
+					if (this.keepDispatcher == false) void dispatcher.close();
 					res._addBody(data);
 					resolve(res);
 				},

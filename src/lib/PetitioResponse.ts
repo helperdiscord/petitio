@@ -1,3 +1,5 @@
+import { assert } from "console";
+
 /**
  * @module PetitioResponse
  */
@@ -24,32 +26,38 @@ export class PetitioResponse {
 	/**
 	 * This takes the data chunks and creates a Buffer, and it sets
 	 * that buffer as the body.
-	 * @param {*} chunks The body to set for the response.
-	 * @return {*} In place operation with no return.
+	 * @param {Buffer[] | Uint8Array[]} chunks The body to set for the response.
+	 * @return {void} In place operation with no return.
 	 */
-	public _addBody(chunks: Buffer[] | Uint8Array[]) {
-		const length = Number(this.headers["content-length"]) || undefined;
+	public _addBody(chunks: Buffer[] | Uint8Array[]): void {
+		// eslint-disable-next-line radix
+		const length = parseInt(this.headers["content-length"]) || undefined;
 		this.body = Buffer.concat(chunks, length);
 	}
 
 	/**
-	 * @param {*} headers The headers to add. This is done by splitting the
+	 * @param {Buffer[]} headers The headers to add. This is done by splitting the
 	 * array into chunks of two, where the first value becomes the header and
 	 * the latter becomes its value. This will also append values to the header
 	 * as an array if it already exists.
-	 * @return {*} In place operation with no return.
+	 * @return {void} In place operation with no return.
 	 */
-	public _parseHeaders(headers: Buffer[]) {
-		const len = headers.length;
-		for (let idx = 1; idx < len; idx += 2) {
-			const key = headers[idx - 1].toString().toLowerCase();
-			const toA = headers[idx].toString();
+	public _parseHeaders(headers: Buffer[]): void {
+		// eslint-disable-next-line no-var
+		var len = headers.length;
+		// @ts-ignore - TypeScript isn't picking up that we are changing this to string[].
+		// eslint-disable-next-line no-plusplus
+		while (len--) headers[len] = headers[len].toString();
+		len = headers.length;
+		// eslint-disable-next-line vars-on-top, no-var
+		for (var idx = 1; idx < len; idx += 2) {
+			// @ts-ignore - TypeScript isn't picking up that we are changing this to string[].
+			const key = headers[idx - 1].toLowerCase();
+			const toA = headers[idx];
 			const val = this.headers[key];
-			// eslint-disable-next-line curly
-			if (val !== undefined) {
-				if (!Array.isArray(val)) this.headers[key] = [val, toA];
-				else val[val.length] = toA;
-			} else this.headers[key] = toA;
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare, max-len, no-unused-expressions, max-statements-per-line, eqeqeq
+			if (val !== undefined) if (Array.isArray(val) == false) (this.headers[key] = [val, toA]); else (val[val.length] = toA);
+			else this.headers[key] = toA;
 		}
 	}
 
@@ -71,8 +79,8 @@ export class PetitioResponse {
 	}
 
 	/**
-	   * @return {*} The raw response body as a buffer.
-	   */
+	 * @return {*} The raw response body as a buffer.
+	 */
 	public raw(): Buffer {
 		return this.body;
 	}
