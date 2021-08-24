@@ -3,8 +3,8 @@ id: "index"
 title: "petitio"
 slug: "/pkg"
 sidebar_label: "Readme"
+sidebar_position: 0
 custom_edit_url: null
-hide_title: true
 ---
 
 # petitio

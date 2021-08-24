@@ -1,38 +1,45 @@
 /**
  * @module PetitioRequest
  */
-
+import type { DispatchOptions as ADO, Options as AO } from "undici/types/agent";
+import { Agent, Client } from "undici";
 import type AbortController from "node-abort-controller";
-// @ts-expect-error 7016 - Unusual type exports
-import Client from "undici/lib/core/client";
-// eslint-disable-next-line node/no-missing-import
-import type ClientType from "undici/types/client";
+import type { Options as CO } from "undici/types/client";
+import type { DispatchOptions as DO } from "undici/types/dispatcher";
 import type { IncomingHttpHeaders } from "http";
 import type { ParsedUrlQueryInput } from "querystring";
 import { PetitioResponse } from "./PetitioResponse";
 import type { Readable } from "stream";
 import { URL } from "url";
 import { join } from "path";
-import { stringify } from "querystring"; // eslint-disable-line no-duplicate-imports
+import { stringify } from "querystring";
+
+export type DispatchOptions = DO | ADO;
+export type Options = AO | CO;
 /**
  * Accepted HTTP methods (currently only supports up to HTTP/1.1).
  */
 export type HTTPMethod = "GET" | "HEAD" | "POST" | "OPTIONS" | "PUT" | "DELETE" | "TRACE" | "CONNECT" | "PATCH";
+
+const validProtocols = ["http:", "https:"];
+
 /**
- * @see [Undici ClientOptions timeout documentation](https://github.com/nodejs/undici/blob/main/docs/api/Client.md#parameter-clientoptions)
+ * @see [Undici AgentOptions timeout documentation](https://github.com/nodejs/undici/blob/main/docs/api/Agent.md#parameter-agentoptions)
  */
 export interface TimeoutOptions {
 	bodyTimeout?: number;
 	headersTimeout?: number;
 	keepAliveTimeout?: number
+	keepAliveMaxTimeout?: number;
+	keepAliveTimeoutThreshold?: number;
 }
 
 export class PetitioRequest {
 	/**
 	 * Options to use for Undici under the hood.
-	 * @see [Undici ClientOptions documentation](https://github.com/nodejs/undici/blob/main/docs/api/Client.md#parameter-clientoptions)
+	 * @see [Undici AgentOptions documentation](https://github.com/nodejs/undici/blob/main/docs/api/Agent.md#parameter-agentoptions)
 	 */
-	public coreOptions: ClientType.Options = {};
+	public coreOptions: Options = {};
 	/**
 	 * The data to be sent as the request body.
 	 * This will be a buffer or string for normal requests, or a stream.Readable
@@ -44,20 +51,21 @@ export class PetitioRequest {
 	 */
 	public httpMethod: HTTPMethod = "GET";
 	/**
-	 * @see [[PetitioRequest.client]]
+	 * @see [[PetitioRequest.dispatch]]
 	 */
-	public kClient?: ClientType;
+	public kDispatch?: Agent | Client;
 	/**
-	 * Whether [[PetitioRequest.kClient]] will persist between [[PetitioRequest.send]]
-	 * calls. It is recommended to enable this for superior performance.
+	 * Whether [[PetitioRequest.kDispatch]] will persist between [[PetitioRequest.send]]
+	 * calls. This is recommended to improve performance (if you will make more
+	 * than one request).
 	 */
-	public keepClient?: boolean;
+	public keepDispatcher = false;
 	/**
 	 * The headers to attach to the request.
 	 */
 	public reqHeaders: IncomingHttpHeaders = {};
 	/**
-	 * The timeout options for the Undici client.
+	 * The timeout options for the Undici agent.
 	 * @see [[TimeoutOptions]]
 	 */
 	public timeoutOptions: TimeoutOptions = {};
@@ -69,42 +77,44 @@ export class PetitioRequest {
 	 * The AbortController attached to the request
 	 * enableable with [[PetitioRequest.signal]]
 	 */
-	public controller?: AbortController;
+	public controller?: AbortController | globalThis.AbortController;
 
 	/**
-	 * @param {(string | URL)} url The URL to start composing a request for.
-	 * @param {HTTPMethod} [httpMethod="GET"] The HTTP method to use.
-	 * @return {PetitioRequest} The Petitio request instance for your URL.
+	 * @param {*} url The URL to start composing a request for.
+	 * @param {*} [httpMethod="GET"] The HTTP method to use.
+	 * @return {*} The Petitio request instance for your URL.
 	 */
 	public constructor(url: string | URL, httpMethod: HTTPMethod = "GET") {
 		this.url = typeof url === "string" ? new URL(url) : url;
 		this.httpMethod = httpMethod;
-		if (!["http:", "https:"].includes(this.url.protocol)) throw new Error(`Bad URL protocol: ${this.url.protocol}`);
+		// eslint-disable-next-line max-len, @typescript-eslint/no-unnecessary-boolean-literal-compare
+		if (validProtocols.includes(this.url.protocol) === false) throw new Error(`Bad URL protocol: ${this.url.protocol}`);
 	}
 
 	/**
-	 * @param {ClientType} client The Undici client instance you wish to use.
-	 * @param {boolean} keepAlive Whether to persist the client across requests or not.
+	 * @param {*} dispatch The Undici agent or client instance you wish to use.
+	 * @param {*} keepAlive Whether to persist the dispatcher across requests or not.
 	 * @return {*} The request object for further composition.
+	 * @see [Undici Agent documentation](https://github.com/nodejs/undici/blob/main/docs/api/Agent.md)
 	 * @see [Undici Client documentation](https://github.com/nodejs/undici/blob/main/docs/api/Client.md)
 	 */
-	public client(client: ClientType, keepAlive?: boolean): this {
-		this.kClient = client;
-		if (keepAlive) this.keepClient = true;
+	public dispatch(agent: Agent | Client, keepAlive?: boolean): this {
+		this.kDispatch = agent;
+		if (keepAlive) this.keepDispatcher = true;
 
 		return this;
 	}
 
 	/**
-	 * @param {*} key The query key to use for the URL query parameters.
-	 * @param {*} value The value to set the query key to.
+	 * @param {string} key The query key to use for the URL query parameters.
+	 * @param {string} value The value to set the query key to.
 	 * @example
 	 * If you wish to make a query at https://example.com/index?query=parameter
 	 * you can use `.query("query", "parameter")`.
 	 */
 	public query(key: string, value: any): this
 	/**
-	 * @param {*} key An object of query keys and their respective values.
+	 * @param {Record<string, any>} key An object of query keys and their respective values.
 	 * @example
 	 * If you wish to make multiple queries at once, you can use
 	 * `.query({"keyOne": "hello", "keyTwo": "world!"})`.
@@ -113,9 +123,11 @@ export class PetitioRequest {
 	public query(key: string | Record<string, any>, value?: any): this {
 		if (typeof key === "object") {
 			const keys = Object.keys(key);
-			// eslint-disable-next-line @typescript-eslint/prefer-for-of, no-plusplus
-			for (let ii = 0; ii < keys.length; ++ii) {
-				const val = keys[ii];
+			// eslint-disable-next-line vars-on-top, no-var
+			var len = keys.length;
+			// eslint-disable-next-line no-plusplus
+			while (len--) {
+				const val = keys[len];
 				this.url.searchParams.append(val, key[val]);
 			}
 		} else this.url.searchParams.append(key, value);
@@ -125,7 +137,7 @@ export class PetitioRequest {
 
 	/**
 	 * @param {string} relativePath A path to resolve relative to the current URL.
-	 * @return {*} The request object for further composition.
+	 * @return {this} The request object for further composition.
 	 * @example `https://example.org/hello/world` with `.path("../petitio")`
 	 * would resolve to `https://example.org/hello/petitio`.
 	 */
@@ -134,9 +146,10 @@ export class PetitioRequest {
 
 		return this;
 	}
+
 	/**
-	 * @param {AbortController} controller A controller instance that handles aborting the request.
-	 * @return {*} The request object for further composition.
+	 * @param {AbortController | globalThis.AbortController} controller A controller instance that handles aborting the request.
+	 * @return {this} The request object for further composition.
 	 * @example
 	 * ```ts
 	 * const controller = new AbortController();
@@ -144,35 +157,35 @@ export class PetitioRequest {
 	 * setTimeout(() => controller.abort(), 5000) // serves as a request timeout
 	 * ```
 	 */
-	public signal(controller: AbortController): this {
+	public signal(controller: AbortController | globalThis.AbortController): this {
 		this.controller = controller;
 
 		return this;
 	}
 
 	/**
-	 * @param {*} data The data to be set for the request body.
+	 * @param {Buffer | string} data The data to be set for the request body.
 	 */
 	public body(data: Buffer | string): this
 	/**
-	 * @param {*} data The data to be set for the request body.
-	 * @param {*} sendAs If data is set to any object type value other than a
+	 * @param {Record<string, any>} data The data to be set for the request body.
+	 * @param {string = "json"} sendAs If data is set to any object type value other than a
 	 * buffer or this is set to `json`, the `Content-Type` header will be set to
 	 * `application/json` and the request data will be set to the stringified
 	 * JSON form of the supplied data.
 	 */
 	public body(data: Record<string, any>, sendAs?: "json"): this
 	/**
-	 * @param {*} data The data to be set for the request body.
-	 * @param {*} sendAs If data is a string or a parsed object of query
+	 * @param {ParsedUrlQueryInput} data The data to be set for the request body.
+	 * @param {"form"} sendAs If data is a string or a parsed object of query
 	 * parameters *AND* this is set to `form`, the `Content-Type` header will be
 	 * set to `application/x-www-form-urlencoded` and the request data will be
 	 * set to the URL encoded version of the query string.
 	 */
 	public body(data: ParsedUrlQueryInput | string, sendAs: "form"): this
 	/**
-	 * @param {*} data The data to be set for the request body.
-	 * @param {*} sendAs If data is a stream.Readable *AND* this is set to
+	 * @param {Readable} data The data to be set for the request body.
+	 * @param {"stream"} sendAs If data is a stream.Readable *AND* this is set to
 	 * `stream`, the body will be sent as the stream with no modifications to
 	 * it or the headers.
 	 */
@@ -200,16 +213,14 @@ export class PetitioRequest {
 				break;
 			}
 			default: {
-				if (typeof data === "object" && !Buffer.isBuffer(data)) {
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
+				if (typeof data === "object" && Buffer.isBuffer(data) === false) {
 					this.data = JSON.stringify(data);
 					this.header({
 						"content-type": "application/json",
 						"content-length": Buffer.byteLength(this.data as string).toString()
 					});
-				} else {
-					this.data = data;
-					this.header("content-length", Buffer.byteLength(this.data as string | Buffer).toString());
-				}
+				} else this.data = data;
 				break;
 			}
 		}
@@ -217,22 +228,22 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {*} header The encoded header name to set.
-	 * @param {*} value The value to set the header to.
+	 * @param {string} header The encoded header name to set.
+	 * @param {string} value The value to set the header to.
 	 */
 	public header(header: string, value: string): this
 	/**
-	 * @param {*} header An object of keys and values to set headers to.
+	 * @param {Record<string, string>} header An object of keys and values to set headers to.
 	 */
 	public header(header: Record<string, string>): this
 	public header(header: string | Record<string, string>, value?: string): this {
 		// eslint-disable-next-line max-len
 		if (typeof header === "object") {
 			const keys = Object.keys(header);
-
-			// eslint-disable-next-line @typescript-eslint/prefer-for-of, no-plusplus
-			for (let ii = 0; ii < keys.length; ++ii) {
-				const val = keys[ii];
+			let len = keys.length;
+			// eslint-disable-next-line no-plusplus
+			while (len--) {
+				const val = keys[len];
 				this.reqHeaders[val.toLowerCase()] = header[val];
 			}
 		} else this.reqHeaders[header.toLowerCase()] = value;
@@ -241,7 +252,7 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {*} method The HTTP method to change the request to.
+	 * @param {HTTPMethod} method The HTTP method to change the request to.
 	 * @return {*} The request object for further composition.
 	 */
 	public method(method: HTTPMethod): this {
@@ -271,17 +282,17 @@ export class PetitioRequest {
 
 	/**
 	 * @param {*} key An object of key-value options to set for Undici.
-	 * @see [Undici Client documentation](https://github.com/nodejs/undici/blob/main/docs/api/Client.md)
+	 * @see [Undici Agent documentation](https://github.com/nodejs/undici/blob/main/docs/api/Agent.md)
 	 */
-	public option(key: ClientType.Options): this
+	public option(key: Options): this
 	/**
 	 * @template T
-	 * @param {T} key The client options key to set.
-	 * @param {ClientType.Options[T]} value The value to set the client option to (type checked).
-	 * @see [Undici Client documentation](https://github.com/nodejs/undici/blob/main/docs/api/Client.md)
+	 * @param {*} key The agent options key to set.
+	 * @param {*} value The value to set the agent option to (type checked).
+	 * @see [Undici Agent documentation](https://github.com/nodejs/undici/blob/main/docs/api/Agent.md)
 	 */
-	public option<T extends keyof ClientType.Options>(key: T, value: ClientType.Options[T]): this
-	public option(key: keyof ClientType.Options | ClientType.Options, value?: any) {
+	public option<T extends keyof Options>(key: T, value: Options[T]): this
+	public option<T extends keyof Options>(key: T | Options, value?: Options[T]) {
 		if (typeof key === "object") Object.assign(this.coreOptions, key);
 		else this.coreOptions[key] = value;
 
@@ -329,34 +340,36 @@ export class PetitioRequest {
 	 */
 	public send(): Promise<PetitioResponse> {
 		return new Promise((resolve, reject) => {
-			const options: ClientType.RequestOptions = {
+			const options: DispatchOptions = {
+				origin: this.url.origin,
 				path: this.url.pathname + this.url.search,
 				method: this.httpMethod,
 				headers: this.reqHeaders,
-				body: this.data,
-				signal: this.controller
+				body: this.data
+				// TODO(doge): implement "idempotent" retry logic
 			};
 
-			const client = this.kClient ?? new Client(this.url.origin, this.coreOptions);
+			const dispatcher = this.kDispatch ?? new Client(this.url.origin, this.coreOptions);
 
 			const res: PetitioResponse = new PetitioResponse();
 			const data: Uint8Array[] | Buffer[] = [];
 
-			client.dispatch(options, {
-				onData: (buff: Buffer) => {
-					return data.push(buff);
-				},
+			dispatcher.dispatch(options, {
+				// @ts-expect-error: Undici mandates erroneous return typing
+				onData: (buff: Buffer) => (data[data.length] = buff),
 				onError: (err: Error) => reject(err),
 				onComplete: () => {
-					if (!this.keepClient) client.close();
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare, eqeqeq
+					if (this.keepDispatcher == false) void dispatcher.close();
 					res._addBody(data);
 					resolve(res);
 				},
 				onConnect: () => null,
-				onHeaders: (statusCode: number, headers: string[], resume: () => void) => {
+				// @ts-ignore: Undici types are incorrect
+				onHeaders: (statusCode: number, headers: Buffer[], resume: () => void) => {
+					resume();
 					res.statusCode = statusCode;
 					res._parseHeaders(headers);
-					resume();
 				}
 			});
 		});

@@ -1,7 +1,9 @@
 import { PetitioRequest } from "../src/lib/PetitioRequest";
 import { PetitioResponse } from "../src/lib/PetitioResponse";
 
-function url(host = "localhost:8080", method = "http") {
+const PORT = 8080 + Number(process.env.JEST_WORKER_ID);
+
+function url(host = `localhost:${PORT}`, method = "http") {
 	return `${method}://${host}`;
 }
 
@@ -14,7 +16,7 @@ describe("Response Parsing", () => {
 			title: "in collaboration we trust",
 			body: "melius simul quam solus"
 		};
-		const request = new PetitioRequest(url("localhost:8080/json-test"));
+		const request = new PetitioRequest(url(`localhost:${PORT}/json-test`));
 		const response = await request.json();
 
 		expect(response).toEqual(json);
@@ -46,6 +48,16 @@ describe("Response Formats", () => {
 		const final = res.text();
 
 		expect(final).toEqual(text);
+	});
+
+	test("GIVEN buffer THEN parse buffer", () => {
+		expect.assertions(1);
+
+		const res = new PetitioResponse();
+		res._addBody([buffer]);
+		const final = res.raw();
+
+		expect(final).toEqual(buffer);
 	});
 
 	test("GIVEN buffer THEN parse encoded text", () => {
