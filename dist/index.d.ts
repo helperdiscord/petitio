@@ -2,6 +2,7 @@
  * @module Petitio
  */
 import { HTTPMethod, PetitioRequest } from "./lib/PetitioRequest";
+import { PetitioResponse } from "./lib/PetitioResponse";
 import { URL } from "url";
 declare const _default: (url: URL | string, method?: HTTPMethod) => PetitioRequest;
 /**
@@ -11,3 +12,4 @@ declare const _default: (url: URL | string, method?: HTTPMethod) => PetitioReque
  * @see [[PetitioRequest.constructor]]
  */
 export = _default;
+export { HTTPMethod, PetitioRequest, PetitioResponse };
