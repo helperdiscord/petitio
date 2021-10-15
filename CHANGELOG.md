@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/helperdiscord/petitio/compare/v1.3.2...v1.4.0) (2021-10-15)
+
+
+### Features
+
+* release [ci_release] ([3ceba21](https://github.com/helperdiscord/petitio/commit/3ceba21006ce0f689f97f63dad4f3852d7fb52d3))
+
 ## [1.3.2](https://github.com/helperdiscord/petitio/compare/v1.3.1...v1.3.2) (2021-05-13)
 
 
