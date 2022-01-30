@@ -1,0 +1,20 @@
+[package]
+edition = "2018"
+name = "petitio-rs"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+hyper = { version = "0.14.13", default-features = false, features = ["http1", "http2", "client", "stream", "runtime"] }
+hyper-rustls = { git = "https://github.com/rustls/hyper-rustls", rev = "59948c6", default-features = false, features = ["http1", "http2", "native-tokio"] }
+napi = { version = "2.0.3", default-features = false, features = ["napi8", "async", "serde-json"] }
+napi-derive = "2.0.7"
+url = "2.2.2"
+
+[build-dependencies]
+napi-build = "1.2.1"
+
+[profile.release]
+lto = true

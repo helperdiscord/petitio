@@ -10,6 +10,7 @@
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
+		"isolatedModules": true,
 		"lib": ["es2019"]
 	}
 }
