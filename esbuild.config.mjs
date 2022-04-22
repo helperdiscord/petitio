@@ -6,7 +6,7 @@ await build({
 	format: "cjs",
 	outfile: "./dist/index.js",
 	platform: "node",
-	target: "es2020",
+	target: "es2021",
 	tsconfig: "tsconfig.json",
 	minify: true
 });

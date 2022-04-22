@@ -1,5 +1,3 @@
-import { assert } from "console";
-
 /**
  * @module PetitioResponse
  */
@@ -72,14 +70,14 @@ export class PetitioResponse {
 
 	/**
 	 * @param {*} [encoding="utf8"] The encoding to use.
-	 * @return {*} The response body decoded as as a string from the buffer, using either the encoding specified in `encoding` or UTF-8 by default..
+	 * @return {string} The response body decoded as as a string from the buffer, using either the encoding specified in `encoding` or UTF-8 by default..
 	 */
 	public text(encoding: BufferEncoding = "utf8"): string {
 		return this.body.toString(encoding);
 	}
 
 	/**
-	 * @return {*} The raw response body as a buffer.
+	 * @return {Buffer} The raw response body as a buffer.
 	 */
 	public raw(): Buffer {
 		return this.body;
