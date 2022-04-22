@@ -1,10 +1,9 @@
-import * as qs from "querystring";
+import * as qs from "node:querystring";
 import { Agent, Client } from "undici";
 import type { HTTPMethod, TimeoutOptions } from "../src/lib/PetitioRequest";
-import AbortController from "node-abort-controller";
-import { URL as NURL } from "url";
+import { URL as NURL } from "node:url";
 import { PetitioRequest } from "../src/lib/PetitioRequest";
-import { Readable } from "stream";
+import { Readable } from "node:stream";
 
 const PORT = 8080 + Number(process.env.JEST_WORKER_ID);
 

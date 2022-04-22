@@ -3,7 +3,7 @@ import {
 	us_listen_socket as uSocket,
 	us_listen_socket_close as uSocketClose
 } from "uWebSockets.js";
-import { URL } from "url";
+import { URL } from "node:url";
 
 const JSON_RESPONSE = JSON.stringify({
 	id: 0,
