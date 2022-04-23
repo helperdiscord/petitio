@@ -3,15 +3,14 @@
  */
 import type { DispatchOptions as ADO, Options as AO } from "undici/types/agent";
 import { Agent, Client } from "undici";
+import { type ParsedUrlQueryInput, stringify } from "node:querystring";
 import type { Options as CO } from "undici/types/client";
 import type { DispatchOptions as DO } from "undici/types/dispatcher";
 import type { IncomingHttpHeaders } from "node:http";
+import { PetitioResponse } from "./PetitioResponse";
 import type { Readable } from "node:stream";
 import { URL } from "node:url";
 import { join } from "node:path";
-// eslint-disable-next-line sort-imports
-import { type ParsedUrlQueryInput, stringify } from "node:querystring";
-import { PetitioResponse } from "./PetitioResponse";
 
 export type DispatchOptions = DO | ADO;
 export type Options = AO | CO;
