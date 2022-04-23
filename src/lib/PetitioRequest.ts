@@ -91,7 +91,7 @@ export class PetitioRequest {
 
 	/**
 	 * @param {*} dispatch The Undici agent or client instance you wish to use.
-	 * @param {boolean} keepAlive Whether to persist the dispatcher across requests or not.
+	 * @param {*} keepAlive Whether to persist the dispatcher across requests or not.
 	 * @return {*} The request object for further composition.
 	 * @see [Undici Agent documentation](https://github.com/nodejs/undici/blob/main/docs/api/Agent.md)
 	 * @see [Undici Client documentation](https://github.com/nodejs/undici/blob/main/docs/api/Client.md)
@@ -146,8 +146,8 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {AbortController} controller A controller instance that handles aborting the request.
-	 * @return {this} The request object for further composition.
+	 * @param {*} controller A controller instance that handles aborting the request.
+	 * @return {*} The request object for further composition.
 	 * @example
 	 * ```ts
 	 * const controller = new AbortController();
