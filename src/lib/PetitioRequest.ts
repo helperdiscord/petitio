@@ -3,16 +3,14 @@
  */
 import type { DispatchOptions as ADO, Options as AO } from "undici/types/agent";
 import { Agent, Client } from "undici";
-import type AbortController from "node-abort-controller";
+import { type ParsedUrlQueryInput, stringify } from "node:querystring";
 import type { Options as CO } from "undici/types/client";
 import type { DispatchOptions as DO } from "undici/types/dispatcher";
-import type { IncomingHttpHeaders } from "http";
-import type { ParsedUrlQueryInput } from "querystring";
+import type { IncomingHttpHeaders } from "node:http";
 import { PetitioResponse } from "./PetitioResponse";
-import type { Readable } from "stream";
-import { URL } from "url";
-import { join } from "path";
-import { stringify } from "querystring";
+import type { Readable } from "node:stream";
+import { URL } from "node:url";
+import { join } from "node:path";
 
 export type DispatchOptions = DO | ADO;
 export type Options = AO | CO;
@@ -77,7 +75,7 @@ export class PetitioRequest {
 	 * The AbortController attached to the request
 	 * enableable with [[PetitioRequest.signal]]
 	 */
-	public controller?: AbortController | globalThis.AbortController;
+	public controller?: AbortController;
 
 	/**
 	 * @param {*} url The URL to start composing a request for.
@@ -148,8 +146,8 @@ export class PetitioRequest {
 	}
 
 	/**
-	 * @param {AbortController | globalThis.AbortController} controller A controller instance that handles aborting the request.
-	 * @return {this} The request object for further composition.
+	 * @param {*} controller A controller instance that handles aborting the request.
+	 * @return {*} The request object for further composition.
 	 * @example
 	 * ```ts
 	 * const controller = new AbortController();
@@ -157,7 +155,7 @@ export class PetitioRequest {
 	 * setTimeout(() => controller.abort(), 5000) // serves as a request timeout
 	 * ```
 	 */
-	public signal(controller: AbortController | globalThis.AbortController): this {
+	public signal(controller: AbortController): this {
 		this.controller = controller;
 
 		return this;

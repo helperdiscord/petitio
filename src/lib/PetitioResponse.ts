@@ -1,5 +1,3 @@
-import { assert } from "console";
-
 /**
  * @module PetitioResponse
  */
